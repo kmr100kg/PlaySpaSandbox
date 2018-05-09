@@ -1,5 +1,7 @@
 create database playsample;
 
+alter database playsample character set utf8;
+
 use playsample;
 
 create table employee(
