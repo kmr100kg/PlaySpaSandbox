@@ -13,6 +13,7 @@
     </head>
     <body>
         <script type="riot/tag" src="@routes.Assets.versioned("tag/top.tag")"></script>
+        <script type="riot/tag" src="@routes.Assets.versioned("tag/list-employee.tag")"></script>
         <script type="riot/tag" src="@routes.Assets.versioned("tag/create-employee.tag")"></script>
 
         <content></content>
@@ -23,6 +24,10 @@
 
             route('/create', function () {
                 riot.mount('content', 'create-employee')
+            })
+
+            route('/list', function () {
+                riot.mount('content', 'list-employee')
             })
 
             route.start(true)

@@ -60,6 +60,7 @@
                 data: JSON.stringify(userForm)
             }).done(function (data) {
                 alert("登録しました！")
+                route('/list')
             }).fail(function (xhr) {
                 self.errors = JSON.parse(xhr.responseText)["errors"]
             }).always(function () {

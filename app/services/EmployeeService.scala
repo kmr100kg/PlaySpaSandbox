@@ -23,10 +23,7 @@ class EmployeeService @Inject()(val dbConfigProvider: DatabaseConfigProvider) ex
     } yield count).transactionally
   }
 
-  def findByEmployeeNumber(employeeNumber: Int) = {
-    val query = Employee.filter(_.employeeNumber === employeeNumber)
-    db.run(query.result)
-  }
+  def findAll() = Employee.result
 
   def validate(employeeNumber: Int) = {
     Employee.filter(_.employeeNumber === employeeNumber).exists.result.flatMap { isExist =>

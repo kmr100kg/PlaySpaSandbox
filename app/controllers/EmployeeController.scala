@@ -1,12 +1,12 @@
 package controllers
 
 import javax.inject._
-import form.EmployeeForm
+import form.{EmployeeForm, EmployeeSummary}
 import play.api.Logger
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import play.api.libs.json.Json
 import play.api.mvc._
-import services.{MasterAlreadyExistException, EmployeeService}
+import services.{EmployeeService, MasterAlreadyExistException}
 import slick.jdbc.JdbcProfile
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -17,6 +17,13 @@ class EmployeeController @Inject()(employeeService: EmployeeService, cc: Control
   AbstractController(cc) with HasDatabaseConfigProvider[JdbcProfile] {
 
   import model.Tables._
+
+  def list = Action.async { implicit request =>
+    db.run(employeeService.findAll()).map { r =>
+      val summary = r.map(r => EmployeeSummary(r.employeeNumber, r.name, r.kana, r.mailAddress, r.password))
+      Ok(Json.toJson(summary))
+    }
+  }
 
   def create = Action.async { implicit request =>
     val form = EmployeeForm.form.bindFromRequest
