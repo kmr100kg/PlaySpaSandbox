@@ -1,0 +1,31 @@
+@()
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>サンプル</title>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+        <script src="@routes.Assets.versioned("lib/jquery/dist/jquery.js")"></script>
+        <script src="@routes.Assets.versioned("lib/riot/riot+compiler.js")"></script>
+        <script src="@routes.Assets.versioned("lib/riot-route/dist/route.js")"></script>
+        <link rel="stylesheet" href="@routes.Assets.versioned("lib/semantic-ui/dist/semantic.css")" />
+    </head>
+    <body>
+        <script type="riot/tag" src="@routes.Assets.versioned("tag/top.tag")"></script>
+        <script type="riot/tag" src="@routes.Assets.versioned("tag/create-employee.tag")"></script>
+
+        <content></content>
+        <script>
+            route('/', function () {
+                riot.mount('content', 'top')
+            })
+
+            route('/create', function () {
+                riot.mount('content', 'create-employee')
+            })
+
+            route.start(true)
+        </script>
+    </body>
+</html>
