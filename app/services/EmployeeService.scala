@@ -35,4 +35,6 @@ class EmployeeService @Inject()(val dbConfigProvider: DatabaseConfigProvider) ex
     }
   }
 
+  def delete(employeeNumber: Int) = Employee.filter(_.employeeNumber === employeeNumber).delete.transactionally
+
 }

@@ -52,4 +52,14 @@ class EmployeeController @Inject()(employeeService: EmployeeService, cc: Control
       }
     })
   }
+
+  def delete(employeeNumber: Int) = Action.async { implicit request =>
+    db.run(employeeService.delete(employeeNumber)).map { _ =>
+      Ok(Json.toJson(Map("successes" -> "削除しました！")))
+    } recover {
+      case e: Throwable =>
+        Logger.error("システムエラー", e)
+        InternalServerError
+    }
+  }
 }

@@ -13,7 +13,7 @@ object Library {
     "org.webjars.bower" % "jquery" % "3.2.1",
     "org.webjars.bower" % "riot-route" % "3.1.1",
     "org.webjars.bower" % "riot" % "3.6.1",
-    "org.webjars.bower" % "semantic-ui" % "2.2.10"
+    "org.webjars" % "Semantic-UI" % "2.3.1"
   )
 
   val di = Seq(guice)

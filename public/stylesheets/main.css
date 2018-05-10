@@ -1,3 +1,5 @@
 body {
     -webkit-text-size-adjust: 100%;
 }
+
+.dimmer { background-color: rgba(255, 254, 253, 0.8) !important; }
