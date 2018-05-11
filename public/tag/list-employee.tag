@@ -17,7 +17,7 @@
             </div>
             <p>{errors}</p>
         </div>
-        <table class="ui very basic table">
+        <table class="ui very basic table" id="employeeTable">
             <tr>
                 <th>社員番号</th>
                 <th>氏名</th>
@@ -26,14 +26,14 @@
                 <th>パスワード</th>
                 <th>&nbsp;</th>
             </tr>
-            <tr each={emp in employees}>
+            <tr each={emp, i in employees} class="emp-row-{i}">
                 <td>{ emp.employeeNumber }</td>
                 <td>{ emp.name }</td>
                 <td>{ emp.kana }</td>
                 <td>{ emp.mailAddress }</td>
                 <td>{ emp.password }</td>
                 <td class="right aligned">
-                    <div class="tiny ui green button" onclick={edit}>編集</div>
+                    <div class="tiny ui green button" emp-index={i} onclick={popUpEditForm}>編集</div>
                     <div class="tiny ui red button" emp-no={emp.employeeNumber} emp-name={emp.name} onclick={delConfirm}>削除</div>
                 </td>
             </tr>
@@ -64,6 +64,41 @@
         </div>
     </div>
 
+    <div class="ui modal" id="editModal">
+        <div class="header">編集</div>
+        <div class="content">
+            <div class="ui form" id="editModalForm">
+                <div class="field">
+                    <label>社員番号(変更不可)</label>
+                    <input type="text" value={getEditEmp('employeeNumber')} readonly="">
+                </div>
+                <div class="field">
+                    <label>氏名<span class="required-input">*</span></label>
+                    <input type="text" value={getEditEmp('name')}>
+                </div>
+                <div class="field">
+                    <label>カナ(全角カナ)<span class="required-input">*</span></label>
+                    <input type="text" value={getEditEmp('kana')}>
+                </div>
+                <div class="field">
+                    <label>メールアドレス<span class="required-input">*</span></label>
+                    <input type="text" value={getEditEmp('mailAddress')}>
+                </div>
+                <div class="field">
+                    <label>パスワード(8桁以上)<span class="required-input">*</span></label>
+                    <input type="text" value={getEditEmp('password')}>
+                </div>
+            </div>
+        </div>
+        <div class="actions">
+            <div class="ui negative button">キャンセル</div>
+            <div class="ui positive right labeled icon button" onclick={prepareEdit}>
+                更新
+                <i class="checkmark icon"></i>
+            </div>
+        </div>
+    </div>
+
     <script>
         const self = this
 
@@ -87,9 +122,34 @@
             })
         }
 
-        edit()
+        popUpEditForm(e)
         {
+            const empIndex = e.currentTarget.getAttribute('emp-index')
+            $('.emp-row-' + empIndex).each(function () {
+                var emp = $(this).children()
+                self.editEmp = {
+                    employeeNumber: emp[0].outerText,
+                    name: emp[1].outerText,
+                    kana: emp[2].outerText,
+                    mailAddress: emp[3].outerText,
+                    password: emp[4].outerText
+                }
+            })
+            self.update()
 
+            $('#editModal').modal({
+                // マルチディスプレイ使用時でもズレなくなる
+                observeChanges: true
+            }).modal('show');
+        }
+
+        prepareEdit()
+        {
+            // const edittedEmp = {}
+            // $('editModalForm input text').each(function () {
+            //     edittedEmp[this.name] = this.value
+            // })
+            //
         }
 
         delConfirm(e)
@@ -144,6 +204,16 @@
             if (msg !== undefined) {
                 self.dispMessage('success', msg)
             }
+        }
+
+        getEditEmp(propertyName)
+        {
+            const emp = self.editEmp
+            if (emp === null || emp === undefined) {
+                return ""
+            }
+
+            return emp[propertyName]
         }
     </script>
 </list-employee>
