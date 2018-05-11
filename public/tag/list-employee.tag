@@ -3,14 +3,14 @@
         <h1>
             社員一覧
         </h1>
-        <div class="ui success message" id="successMsgBox" show={isCompleted}>
+        <div class="ui success message" id="successMsgBox" show={successes}>
             <i class="close icon"></i>
             <div class="header">
                 Completed
             </div>
             <p>{successes}</p>
         </div>
-        <div class="ui success message" id="errorMsgBox" show={isFailed}>
+        <div class="ui success message" id="errorMsgBox" show={errors}>
             <i class="close icon"></i>
             <div class="header">
                 Failed
@@ -68,7 +68,6 @@
         const self = this
 
         self.on("mount", function () {
-            self.isCompleted = false
             self.list()
             self.dispGlobalMessage()
         })
@@ -123,7 +122,6 @@
         dispMessage(msgType, message)
         {
             if (msgType === 'success') {
-                self.isCompleted = true
                 self.successes = message
                 self.update()
                 $('#successMsgBox').transition({
@@ -131,7 +129,6 @@
                     duration: '2s'
                 });
             } else {
-                self.isFailed = true
                 self.errors = message
                 self.update()
                 $('#errorMsgBox').transition({
