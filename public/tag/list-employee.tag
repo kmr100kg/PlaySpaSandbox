@@ -33,8 +33,8 @@
                 <td>{ emp.mailAddress }</td>
                 <td>{ emp.password }</td>
                 <td class="right aligned">
-                    <div class="ui green button" onclick={edit}>編集</div>
-                    <div class="ui red button" emp-no={emp.employeeNumber} emp-name={emp.name} onclick={delConfirm}>削除</div>
+                    <div class="tiny ui green button" onclick={edit}>編集</div>
+                    <div class="tiny ui red button" emp-no={emp.employeeNumber} emp-name={emp.name} onclick={delConfirm}>削除</div>
                 </td>
             </tr>
         </table>
