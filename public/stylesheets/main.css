@@ -3,3 +3,5 @@ body {
 }
 
 .dimmer { background-color: rgba(255, 254, 253, 0.8) !important; }
+
+.default-margin-top { margin-top: 10px; }

@@ -1,5 +1,5 @@
 <create-employee>
-    <div class="ui container">
+    <div class="ui container default-margin-top">
         <h1>
             社員登録
         </h1>
@@ -59,11 +59,10 @@
                 contentType: 'application/json',
                 data: JSON.stringify(userForm)
             }).done(function (data) {
-                alert("登録しました！")
+                self.globalMessage.add('createdEmployee', data.successes)
                 route('/list')
             }).fail(function (xhr) {
-                self.errors = JSON.parse(xhr.responseText)["errors"]
-            }).always(function () {
+                self.errors = self.globalErrorHandler.handle(xhr)
                 self.update()
             })
         }

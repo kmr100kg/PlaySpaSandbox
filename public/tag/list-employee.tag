@@ -1,8 +1,22 @@
 <list-employee>
-    <div class="ui container">
+    <div class="ui container default-margin-top">
         <h1>
             社員一覧
         </h1>
+        <div class="ui success message" id="successMsgBox" show={isCompleted}>
+            <i class="close icon"></i>
+            <div class="header">
+                Completed
+            </div>
+            <p>{successes}</p>
+        </div>
+        <div class="ui success message" id="errorMsgBox" show={isFailed}>
+            <i class="close icon"></i>
+            <div class="header">
+                Failed
+            </div>
+            <p>{errors}</p>
+        </div>
         <table class="ui very basic table">
             <tr>
                 <th>社員番号</th>
@@ -54,7 +68,9 @@
         const self = this
 
         self.on("mount", function () {
+            self.isCompleted = false
             self.list()
+            self.dispGlobalMessage()
         })
 
         list()
@@ -66,10 +82,9 @@
                 dataType: 'json'
             }).done(function (data) {
                 self.employees = data
-            }).fail(function (xhr) {
-                self.errors = JSON.parse(xhr.responseText)["errors"]
-            }).always(function () {
                 self.update()
+            }).fail(function (xhr) {
+                self.dispMessage('fail', self.globalErrorHandler.handle(xhr))
             })
         }
 
@@ -98,12 +113,40 @@
                 contentType: 'application/json',
                 dataType: 'json'
             }).done(function (data) {
-                alert("削除しました！")
+                self.list()
+                self.dispMessage('success', data.successes)
             }).fail(function (xhr) {
-                self.errors = JSON.parse(xhr.responseText)["errors"]
-            }).always(function () {
-                self.update()
+                self.dispMessage('fail', self.globalErrorHandler.handle(xhr))
             })
+        }
+
+        dispMessage(msgType, message)
+        {
+            if (msgType === 'success') {
+                self.isCompleted = true
+                self.successes = message
+                self.update()
+                $('#successMsgBox').transition({
+                    animation: 'fade in',
+                    duration: '2s'
+                });
+            } else {
+                self.isFailed = true
+                self.errors = message
+                self.update()
+                $('#errorMsgBox').transition({
+                    animation: 'fade in',
+                    duration: '2s'
+                });
+            }
+        }
+
+        dispGlobalMessage()
+        {
+            const msg = self.globalMessage.take('createdEmployee')
+            if (msg !== undefined) {
+                self.dispMessage('success', msg)
+            }
         }
     </script>
 </list-employee>

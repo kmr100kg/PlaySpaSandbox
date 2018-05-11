@@ -10,6 +10,7 @@
         <script src="@routes.Assets.versioned("lib/riot/riot+compiler.js")"></script>
         <script src="@routes.Assets.versioned("lib/riot-route/dist/route.js")"></script>
         <script src="@routes.Assets.versioned("lib/semantic-ui/semantic.min.js")"></script>
+        <script src="@routes.Assets.versioned("/javascripts/main.js")"></script>
         <link rel="stylesheet" href="@routes.Assets.versioned("lib/semantic-ui/semantic.css")" />
         <link rel="stylesheet" href="@routes.Assets.versioned("/stylesheets/main.css")" />
     </head>
@@ -17,9 +18,15 @@
         <script type="riot/tag" src="@routes.Assets.versioned("tag/top.tag")"></script>
         <script type="riot/tag" src="@routes.Assets.versioned("tag/list-employee.tag")"></script>
         <script type="riot/tag" src="@routes.Assets.versioned("tag/create-employee.tag")"></script>
+        <script type="riot/tag" src="@routes.Assets.versioned("tag/error.tag")"></script>
 
         <content></content>
         <script>
+            const self = this
+
+            riot.mixin({globalErrorHandler: globalErrorHandler})
+            riot.mixin({globalMessage: globalMessage})
+
             route('/', function () {
                 riot.mount('content', 'top')
             })
@@ -30,6 +37,10 @@
 
             route('/list', function () {
                 riot.mount('content', 'list-employee')
+            })
+
+            route('/error', function () {
+                riot.mount('content', 'error')
             })
 
             route.start(true)

@@ -6,7 +6,7 @@ import play.api.Logger
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import play.api.libs.json.Json
 import play.api.mvc._
-import services.{EmployeeService, MasterAlreadyExistException}
+import services.{EmployeeService, MasterAlreadyExistException, MasterNotExistException}
 import slick.jdbc.JdbcProfile
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -54,9 +54,11 @@ class EmployeeController @Inject()(employeeService: EmployeeService, cc: Control
   }
 
   def delete(employeeNumber: Int) = Action.async { implicit request =>
-    db.run(employeeService.delete(employeeNumber)).map { _ =>
-      Ok(Json.toJson(Map("successes" -> "削除しました！")))
+    db.run(employeeService.delete(employeeNumber)).map { name =>
+      Ok(Json.toJson(Map("successes" -> s"${name}さんを削除しました！")))
     } recover {
+      case _: MasterNotExistException =>
+        BadRequest(Json.toJson(Map("errors" -> "社員が存在しません")))
       case e: Throwable =>
         Logger.error("システムエラー", e)
         InternalServerError
