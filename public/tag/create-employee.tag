@@ -4,7 +4,7 @@
             社員登録
         </h1>
         <form class="ui form error user-form">
-            <div class="ui error message" show={errors}>
+            <div class="ui error message" show={errors} id="errorMsgBox">
                 <virtual each={e in errors}>
                     <div class="header">{e[0]}</div>
                     <p>{e[1]}</p>
@@ -62,9 +62,18 @@
                 self.globalMessage.add('createdEmployee', data.successes)
                 route('/list')
             }).fail(function (xhr) {
-                self.errors = self.globalErrorHandler.handle(xhr)
-                self.update()
+                self.dispMessage(self.globalErrorHandler.handle(xhr))
             })
+        }
+
+        dispMessage(msg)
+        {
+            self.errors = msg
+            self.update()
+            $('#errorMsgBox').transition({
+                animation: 'fade in',
+                duration: '2s'
+            });
         }
     </script>
 </create-employee>
