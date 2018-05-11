@@ -1,5 +1,5 @@
 <top>
-    <div class="ui container">
+    <div class="ui container default-margin-top">
         <h1>
             メニュー
         </h1>
