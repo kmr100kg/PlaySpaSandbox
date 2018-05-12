@@ -68,25 +68,35 @@
         <div class="header">編集</div>
         <div class="content">
             <div class="ui form" id="editModalForm">
-                <div class="field">
-                    <label>社員番号(変更不可)</label>
-                    <input type="text" value={getEditEmp('employeeNumber')} readonly="">
+                <div class="two fields">
+                    <div class="field">
+                        <label>社員番号(変更不可)</label>
+                        <input type="text" value={getEditEmp('employeeNumber')} readonly="">
+                    </div>
+                    <div class="field">
+                        <label>氏名<span class="required-input">*</span></label>
+                        <input type="text" value={getEditEmp('name')}>
+                    </div>
                 </div>
-                <div class="field">
-                    <label>氏名<span class="required-input">*</span></label>
-                    <input type="text" value={getEditEmp('name')}>
+                <div class="two fields">
+                    <div class="field">
+                        <label>カナ(全角カナ)<span class="required-input">*</span></label>
+                        <input type="text" value={getEditEmp('kana')}>
+                    </div>
+                    <div class="field">
+                        <label>メールアドレス<span class="required-input">*</span></label>
+                        <input type="text" value={getEditEmp('mailAddress')}>
+                    </div>
                 </div>
-                <div class="field">
-                    <label>カナ(全角カナ)<span class="required-input">*</span></label>
-                    <input type="text" value={getEditEmp('kana')}>
-                </div>
-                <div class="field">
-                    <label>メールアドレス<span class="required-input">*</span></label>
-                    <input type="text" value={getEditEmp('mailAddress')}>
-                </div>
-                <div class="field">
-                    <label>パスワード(8桁以上)<span class="required-input">*</span></label>
-                    <input type="text" value={getEditEmp('password')}>
+                <div class="two fields">
+                    <div class="field">
+                        <label>パスワード(8桁以上)<span class="required-input">*</span></label>
+                        <input type="password" value={getEditEmp('password')}>
+                    </div>
+                    <div class="field">
+                        <label>パスワード確認(8桁以上)<span class="required-input">*</span></label>
+                        <input type="password" value={getEditEmp('password')}>
+                    </div>
                 </div>
             </div>
         </div>
