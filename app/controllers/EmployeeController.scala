@@ -53,6 +53,10 @@ class EmployeeController @Inject()(employeeService: EmployeeService, cc: Control
     })
   }
 
+  def prepareEdit = Action.async { implicit request =>
+    future(Ok)
+  }
+
   def delete(employeeNumber: Int) = Action.async { implicit request =>
     db.run(employeeService.delete(employeeNumber)).map { name =>
       Ok(Json.toJson(Map("successes" -> s"${name}さんを削除しました！")))
