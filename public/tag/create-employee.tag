@@ -12,31 +12,31 @@
             </div>
             <div class="two fields">
                 <div class="field">
-                    <label>社員番号</label>
+                    <label>社員番号<span class="required-input">*</span></label>
                     <input placeholder="半角数字" type="text" name="employeeNumber">
                 </div>
                 <div class="field">
-                    <label>名前</label>
+                    <label>名前<span class="required-input">*</span></label>
                     <input placeholder="サンプル太郎" type="text" name="name">
                 </div>
             </div>
             <div class="two fields">
                 <div class="field">
-                    <label>カナ</label>
+                    <label>カナ<span class="required-input">*</span></label>
                     <input placeholder="サンプルタロウ" type="text" name="kana">
                 </div>
                 <div class="field">
-                    <label>メールアドレス</label>
+                    <label>メールアドレス<span class="required-input">*</span></label>
                     <input placeholder="hoge@sample.co.jp" type="text" name="mailAddress">
                 </div>
             </div>
             <div class="two fields">
                 <div class="field">
-                    <label>パスワード(半角英数記号8文字以上)</label>
+                    <label>パスワード<span class="required-input">*</span></label>
                     <input placeholder="password" type="password" name="password">
                 </div>
                 <div class="field">
-                    <label>パスワード(確認)</label>
+                    <label>パスワード確認<span class="required-input">*</span></label>
                     <input placeholder="password" type="password" name="passwordConfirm">
                 </div>
             </div>

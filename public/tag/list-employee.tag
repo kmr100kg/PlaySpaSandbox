@@ -69,31 +69,31 @@
                 <div class="two fields">
                     <div class="field">
                         <label>社員番号(変更不可)</label>
-                        <input type="text" value={getEditEmp('employeeNumber')} readonly="">
+                        <input type="text" name="employeeNumber" value={getEditEmp('employeeNumber')} readonly="">
                     </div>
                     <div class="field">
                         <label>氏名<span class="required-input">*</span></label>
-                        <input type="text" value={getEditEmp('name')}>
+                        <input type="text" name="name" value={getEditEmp('name')}>
                     </div>
                 </div>
                 <div class="two fields">
                     <div class="field">
-                        <label>カナ(全角カナ)<span class="required-input">*</span></label>
-                        <input type="text" value={getEditEmp('kana')}>
+                        <label>カナ<span class="required-input">*</span></label>
+                        <input type="text" name="kana" value={getEditEmp('kana')}>
                     </div>
                     <div class="field">
                         <label>メールアドレス<span class="required-input">*</span></label>
-                        <input type="text" value={getEditEmp('mailAddress')}>
+                        <input type="text" name="mailAddress" value={getEditEmp('mailAddress')}>
                     </div>
                 </div>
                 <div class="two fields">
                     <div class="field">
-                        <label>パスワード(8桁以上)<span class="required-input">*</span></label>
-                        <input type="password" value={getEditEmp('password')}>
+                        <label>新しいパスワード</label>
+                        <input type="password" name="newPassword" value={getEditEmp('password')}>
                     </div>
                     <div class="field">
-                        <label>パスワード確認(8桁以上)<span class="required-input">*</span></label>
-                        <input type="password" value={getEditEmp('password')}>
+                        <label>新しいパスワード確認</label>
+                        <input type="password" name="newPasswordConfirm" value={getEditEmp('password')}>
                     </div>
                 </div>
             </div>
@@ -152,11 +152,25 @@
 
         prepareEdit()
         {
-            // const edittedEmp = {}
-            // $('editModalForm input text').each(function () {
-            //     edittedEmp[this.name] = this.value
-            // })
-            //
+            const editedEmp = {}
+            $('#editModalForm input:text').each(function () {
+                editedEmp[this.name] = this.value
+            })
+            $('#editModalForm input:password').each(function () {
+                editedEmp[this.name] = this.value
+            })
+
+            $.ajax({
+                type: 'POST',
+                url: '/prepareEdit',
+                contentType: 'application/json',
+                data: JSON.stringify(editedEmp)
+            }).done(function (data) {
+                self.list()
+                self.dispMessage('success', data.successes)
+            }).fail(function (xhr) {
+                self.dispMessage('fail', self.globalErrorHandler.handle(xhr))
+            })
         }
 
         delConfirm(e)
