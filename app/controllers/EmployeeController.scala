@@ -20,7 +20,7 @@ class EmployeeController @Inject()(employeeService: EmployeeService, cc: Control
 
   def list = Action.async { implicit request =>
     db.run(employeeService.findAll()).map { r =>
-      val summary = r.map(r => EmployeeSummary(r.employeeNumber, r.name, r.kana, r.mailAddress, r.password))
+      val summary = r.map(r => EmployeeSummary(r.employeeNumber, r.name, r.kana, r.mailAddress))
       Ok(Json.toJson(summary))
     }
   }

@@ -23,7 +23,6 @@
                 <th>氏名</th>
                 <th>カナ</th>
                 <th>メールアドレス</th>
-                <th>パスワード</th>
                 <th>&nbsp;</th>
             </tr>
             <tr each={emp, i in employees} class="emp-row-{i}">
@@ -31,7 +30,6 @@
                 <td>{ emp.name }</td>
                 <td>{ emp.kana }</td>
                 <td>{ emp.mailAddress }</td>
-                <td>{ emp.password }</td>
                 <td class="right aligned">
                     <div class="tiny ui green button" emp-index={i} onclick={popUpEditForm}>編集</div>
                     <div class="tiny ui red button" emp-no={emp.employeeNumber} emp-name={emp.name} onclick={delConfirm}>削除</div>
@@ -142,7 +140,6 @@
                     name: emp[1].outerText,
                     kana: emp[2].outerText,
                     mailAddress: emp[3].outerText,
-                    password: emp[4].outerText
                 }
             })
             self.update()
