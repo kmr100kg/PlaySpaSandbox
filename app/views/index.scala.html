@@ -19,6 +19,7 @@
         <script type="riot/tag" src="@routes.Assets.versioned("tag/list-employee.tag")"></script>
         <script type="riot/tag" src="@routes.Assets.versioned("tag/create-employee.tag")"></script>
         <script type="riot/tag" src="@routes.Assets.versioned("tag/error.tag")"></script>
+        <script type="riot/tag" src="@routes.Assets.versioned("tag/not-found.tag")"></script>
 
         <content></content>
         <script>
@@ -42,6 +43,11 @@
             route('/error', function () {
                 riot.mount('content', 'error')
             })
+
+            route('/notFound', function () {
+                riot.mount('content', 'not-found')
+            })
+
 
             route.start(true)
         </script>

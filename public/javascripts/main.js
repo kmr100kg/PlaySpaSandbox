@@ -4,6 +4,9 @@ var globalErrorHandler = {
             return JSON.parse(xhr.responseText)["errors"]
         } else if (xhr.status === 403) {
             return JSON.parse(xhr.responseText)["errors"]
+        } else if (xhr.status === 404) {
+            route('/notFound')
+            return {}
         } else {
             route('/error')
             return {}
