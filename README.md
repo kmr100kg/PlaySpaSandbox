@@ -1,6 +1,11 @@
-# Playframework2.6 SPA Sample
+# Playframework2.6 SPA Sandbox
 
 Playframework2.6, RiotJS, SemanticUIを使ったサンプルアプリです。
+
+今のところ以下の機能を実装しています。
+
+* 簡単なCRUD
+    * バリデーションあり
 
 ## Running
 
@@ -44,4 +49,5 @@ sbt run
 ```
 
 ブラウザでlocalhost:9000にアクセス！
+
 トップページ(メニュー)が表示されれば完了です。
