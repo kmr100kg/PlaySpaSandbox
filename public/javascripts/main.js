@@ -26,3 +26,11 @@ var globalMessage = {
         return msg
     }
 }
+
+function fadeMessage(id)
+{
+    $('#' + id).transition({
+        animation: 'fade in',
+        duration: '2s'
+    });
+}

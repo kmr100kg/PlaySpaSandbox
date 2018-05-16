@@ -18,6 +18,8 @@ class EmployeeService @Inject()(val dbConfigProvider: DatabaseConfigProvider) ex
   import profile.api._
   import model.Tables._
 
+  def findAll() = Employee.result
+
   def create(employeeRow: EmployeeRow) = {
     (for {
       _ <- validateBeforeCreate(employeeRow.employeeNumber)
@@ -25,7 +27,6 @@ class EmployeeService @Inject()(val dbConfigProvider: DatabaseConfigProvider) ex
     } yield count).transactionally
   }
 
-  def findAll() = Employee.result
 
   def validateBeforeCreate(employeeNumber: Int) = {
     Employee.filter(_.employeeNumber === employeeNumber).exists.result.flatMap { isExist =>
@@ -33,6 +34,26 @@ class EmployeeService @Inject()(val dbConfigProvider: DatabaseConfigProvider) ex
         DBIO.failed(new MasterAlreadyExistException)
       } else {
         DBIO.successful(Done)
+      }
+    }
+  }
+
+  def edit(employeeRow: EmployeeRow) = {
+    (for {
+      password <- validateBeforeEdit(employeeRow.employeeNumber)
+      _ <- password.flatMap { r =>
+        if (employeeRow.password.isEmpty) Employee.filter(_.employeeNumber === employeeRow.employeeNumber).update(employeeRow.copy(password = r))
+        else Employee.filter(_.employeeNumber === employeeRow.employeeNumber).update(employeeRow)
+      }
+    } yield ()).transactionally
+  }
+
+  def validateBeforeEdit(employeeNumber: Int) = {
+    Employee.filter(_.employeeNumber === employeeNumber).result.headOption.map { r =>
+      if (r.isDefined) {
+        DBIO.successful(r.get.password)
+      } else {
+        DBIO.failed(new MasterNotExistException)
       }
     }
   }

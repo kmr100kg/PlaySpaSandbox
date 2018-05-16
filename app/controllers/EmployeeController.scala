@@ -1,7 +1,7 @@
 package controllers
 
 import javax.inject._
-import form.{EmployeeForm, EmployeeSummary}
+import form.{EmployeeForm, EmployeeSummary, EmployeeEditForm}
 import play.api.Logger
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import play.api.libs.json.Json
@@ -53,8 +53,27 @@ class EmployeeController @Inject()(employeeService: EmployeeService, cc: Control
     })
   }
 
-  def prepareEdit = Action.async { implicit request =>
-    future(Ok)
+  def edit = Action.async { implicit request =>
+    val form = EmployeeEditForm.form.bindFromRequest
+    form.fold(error => {
+      val messages = error.errors.map { e =>
+        val message = cc.messagesApi.preferred(request)
+        (message(e.key), message(e.message))
+      }
+      future(BadRequest(Json.toJson(Map("errors" -> messages))))
+    }, success => {
+      val employeeRow = EmployeeRow(
+        employeeNumber = success.employeeNumber,
+        name = success.name,
+        kana = success.kana,
+        mailAddress = success.mailAddress,
+        // 空の場合は更新前にDBの値に置き換える
+        password = success.newPassword.getOrElse("")
+      )
+      db.run(employeeService.edit(employeeRow)).map { _ =>
+        Ok(Json.toJson(Map("successes" -> s"${employeeRow.name}さんを更新しました！")))
+      }
+    })
   }
 
   def delete(employeeNumber: Int) = Action.async { implicit request =>

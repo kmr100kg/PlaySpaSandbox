@@ -8,7 +8,7 @@ GET     /list                       controllers.EmployeeController.list
 
 POST    /create                     controllers.EmployeeController.create
 
-POST    /prepareEdit                controllers.EmployeeController.prepareEdit
+POST    /edit                       controllers.EmployeeController.edit
 
 GET     /delete                     controllers.EmployeeController.delete(employeeNumber: Int)
 

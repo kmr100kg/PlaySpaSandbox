@@ -3,14 +3,14 @@
         <h1>
             社員一覧
         </h1>
-        <div class="ui success message" id="successMsgBox" show={successes}>
+        <div class="ui success message" id="successMsgBox" if={successes}>
             <i class="close icon"></i>
             <div class="header">
                 Completed
             </div>
             <p>{successes}</p>
         </div>
-        <div class="ui success message" id="errorMsgBox" show={errors}>
+        <div class="ui error message" id="errorMsgBox" if={errors}>
             <i class="close icon"></i>
             <div class="header">
                 Failed
@@ -65,6 +65,13 @@
     <div class="ui modal" id="editModal">
         <div class="header">編集</div>
         <div class="content">
+            <div class="ui error message" id="editModalErrorMsgBox" if={modalErrors}>
+                <i class="close icon"></i>
+                <virtual each={e in modalErrors}>
+                    <div class="header">{e[0]}</div>
+                    <p>{e[1]}</p>
+                </virtual>
+            </div>
             <div class="ui form" id="editModalForm">
                 <div class="two fields">
                     <div class="field">
@@ -100,7 +107,7 @@
         </div>
         <div class="actions">
             <div class="ui negative button">キャンセル</div>
-            <div class="ui positive right labeled icon button" onclick={prepareEdit}>
+            <div class="ui green right labeled icon button" onclick={edit}>
                 更新
                 <i class="checkmark icon"></i>
             </div>
@@ -126,7 +133,9 @@
                 self.employees = data
                 self.update()
             }).fail(function (xhr) {
-                self.dispMessage('fail', self.globalErrorHandler.handle(xhr))
+                self.errors = self.globalErrorHandler.handle(xhr)
+                self.update()
+                fadeMessage('errorMsgBox')
             })
         }
 
@@ -142,6 +151,7 @@
                     mailAddress: emp[3].outerText,
                 }
             })
+            self.modalErrors = null
             self.update()
 
             $('#editModal').modal({
@@ -150,26 +160,31 @@
             }).modal('show');
         }
 
-        prepareEdit()
+        edit()
         {
             const editedEmp = {}
-            $('#editModalForm input:text').each(function () {
+            $('#editModalForm').find('input:text').each(function () {
                 editedEmp[this.name] = this.value
             })
-            $('#editModalForm input:password').each(function () {
+            $('#editModalForm').find('input:password').each(function () {
                 editedEmp[this.name] = this.value
             })
 
             $.ajax({
                 type: 'POST',
-                url: '/prepareEdit',
+                url: '/edit',
                 contentType: 'application/json',
                 data: JSON.stringify(editedEmp)
             }).done(function (data) {
-                self.list()
-                self.dispMessage('success', data.successes)
+                self.successes = data.successes
+                self.update()
+                fadeMessage('successMsgBox')
             }).fail(function (xhr) {
-                self.dispMessage('fail', self.globalErrorHandler.handle(xhr))
+                self.modalErrors = self.globalErrorHandler.handle(xhr)
+                self.update()
+                fadeMessage('editModalErrorMsgBox')
+            }).always(function () {
+                self.list()
             })
         }
 
@@ -194,36 +209,23 @@
                 dataType: 'json'
             }).done(function (data) {
                 self.list()
-                self.dispMessage('success', data.successes)
+                self.successes = data.successes
+                self.update()
+                fadeMessage('successMsgBox')
             }).fail(function (xhr) {
-                self.dispMessage('fail', self.globalErrorHandler.handle(xhr))
+                self.errors = self.globalErrorHandler.handle(xhr)
+                self.update()
+                fadeMessage('errorMsgBox')
             })
-        }
-
-        dispMessage(msgType, message)
-        {
-            if (msgType === 'success') {
-                self.successes = message
-                self.update()
-                $('#successMsgBox').transition({
-                    animation: 'fade in',
-                    duration: '2s'
-                });
-            } else {
-                self.errors = message
-                self.update()
-                $('#errorMsgBox').transition({
-                    animation: 'fade in',
-                    duration: '2s'
-                });
-            }
         }
 
         dispGlobalMessage()
         {
             const msg = self.globalMessage.take('createdEmployee')
             if (msg !== undefined) {
-                self.dispMessage('success', msg)
+                self.successes = msg
+                self.update()
+                fadeMessage('successMsgBox')
             }
         }
 
