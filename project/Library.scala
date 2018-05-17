@@ -6,7 +6,10 @@ object Library {
   val backend = Seq(
     "mysql" % "mysql-connector-java" % "6.0.6",
     "com.typesafe.play" %% "play-slick" % "3.0.3",
-    "com.typesafe.slick" %% "slick-codegen" % "3.2.1"
+    "com.typesafe.slick" %% "slick" % "3.2.1",
+    "com.typesafe.slick" %% "slick-hikaricp" % "3.2.1",
+    "com.typesafe.slick" %% "slick-codegen" % "3.2.1",
+    "io.strongtyped" %% "active-slick" % "0.3.5"
   )
 
   val security = Seq(
