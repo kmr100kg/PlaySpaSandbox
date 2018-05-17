@@ -1,7 +1,7 @@
 import Library._
 import Library.{testing => test}
 
-name := """play-example"""
+name := """play-spa-sandbox"""
 
 version := "1.0-SNAPSHOT"
 
