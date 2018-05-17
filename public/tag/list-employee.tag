@@ -170,6 +170,9 @@
                 editedEmp[this.name] = this.value
             })
 
+            // 一覧ページに出ているメッセージを削除
+            self.successes = null
+            self.errors = null
             $.ajax({
                 type: 'POST',
                 url: '/edit',
@@ -178,6 +181,7 @@
             }).done(function (data) {
                 self.successes = data.successes
                 self.update()
+                $('#editModal').modal('hide');
                 fadeMessage('successMsgBox')
             }).fail(function (xhr) {
                 self.modalErrors = self.globalErrorHandler.handle(xhr)
