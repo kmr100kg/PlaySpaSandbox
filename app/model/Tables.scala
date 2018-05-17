@@ -23,18 +23,19 @@ trait Tables {
    *  @param name Database column name SqlType(VARCHAR), Length(255,true)
    *  @param kana Database column kana SqlType(VARCHAR), Length(255,true)
    *  @param mailAddress Database column mail_address SqlType(VARCHAR), Length(255,true)
-   *  @param password Database column password SqlType(VARCHAR), Length(255,true) */
-  case class EmployeeRow(employeeNumber: Int, name: String, kana: String, mailAddress: String, password: String)
+   *  @param password Database column password SqlType(VARCHAR), Length(255,true)
+   *  @param updateDate Database column update_date SqlType(DATETIME) */
+  case class EmployeeRow(employeeNumber: Int, name: String, kana: String, mailAddress: String, password: String, updateDate: java.sql.Timestamp)
   /** GetResult implicit for fetching EmployeeRow objects using plain SQL queries */
-  implicit def GetResultEmployeeRow(implicit e0: GR[Int], e1: GR[String]): GR[EmployeeRow] = GR{
+  implicit def GetResultEmployeeRow(implicit e0: GR[Int], e1: GR[String], e2: GR[java.sql.Timestamp]): GR[EmployeeRow] = GR{
     prs => import prs._
-    EmployeeRow.tupled((<<[Int], <<[String], <<[String], <<[String], <<[String]))
+    EmployeeRow.tupled((<<[Int], <<[String], <<[String], <<[String], <<[String], <<[java.sql.Timestamp]))
   }
   /** Table description of table employee. Objects of this class serve as prototypes for rows in queries. */
   class Employee(_tableTag: Tag) extends profile.api.Table[EmployeeRow](_tableTag, Some("playsample"), "employee") {
-    def * = (employeeNumber, name, kana, mailAddress, password) <> (EmployeeRow.tupled, EmployeeRow.unapply)
+    def * = (employeeNumber, name, kana, mailAddress, password, updateDate) <> (EmployeeRow.tupled, EmployeeRow.unapply)
     /** Maps whole row to an option. Useful for outer joins. */
-    def ? = (Rep.Some(employeeNumber), Rep.Some(name), Rep.Some(kana), Rep.Some(mailAddress), Rep.Some(password)).shaped.<>({r=>import r._; _1.map(_=> EmployeeRow.tupled((_1.get, _2.get, _3.get, _4.get, _5.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+    def ? = (Rep.Some(employeeNumber), Rep.Some(name), Rep.Some(kana), Rep.Some(mailAddress), Rep.Some(password), Rep.Some(updateDate)).shaped.<>({r=>import r._; _1.map(_=> EmployeeRow.tupled((_1.get, _2.get, _3.get, _4.get, _5.get, _6.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
 
     /** Database column employee_number SqlType(INT), PrimaryKey */
     val employeeNumber: Rep[Int] = column[Int]("employee_number", O.PrimaryKey)
@@ -46,6 +47,8 @@ trait Tables {
     val mailAddress: Rep[String] = column[String]("mail_address", O.Length(255,varying=true))
     /** Database column password SqlType(VARCHAR), Length(255,true) */
     val password: Rep[String] = column[String]("password", O.Length(255,varying=true))
+    /** Database column update_date SqlType(DATETIME) */
+    val updateDate: Rep[java.sql.Timestamp] = column[java.sql.Timestamp]("update_date")
   }
   /** Collection-like TableQuery object for table Employee */
   lazy val Employee = new TableQuery(tag => new Employee(tag))

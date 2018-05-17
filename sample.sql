@@ -9,7 +9,8 @@ create table employee(
   name varchar(255) not null,
   kana varchar(255) not null,
   mail_address varchar(255) not null,
-  password varchar(255) not null
+  password varchar(255) not null,
+  update_date timestamp not null
 );
 
 insert into employee values(1, 'サンプル一郎', 'サンプルイチロウ', 'sample1@mail.co.jp', 'test1234');
