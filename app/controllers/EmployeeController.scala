@@ -1,5 +1,8 @@
 package controllers
 
+import java.sql.Timestamp
+import java.time.{LocalDateTime, ZoneId}
+
 import form.{EmployeeEditForm, EmployeeForm, EmployeeSummary}
 import io.github.nremond.SecureHash
 import javax.inject._
@@ -40,7 +43,8 @@ class EmployeeController @Inject()(employeeService: EmployeeService, cc: Control
         name = success.name,
         kana = success.kana,
         mailAddress = success.mailAddress,
-        password = success.password
+        password = success.password,
+        updateDate = Timestamp.valueOf(LocalDateTime.now())
       )
       db.run(employeeService.create(employeeRow)).map { _ =>
         Ok(Json.toJson(Map("successes" -> s"${success.name}さんを登録しました！")))
@@ -69,7 +73,8 @@ class EmployeeController @Inject()(employeeService: EmployeeService, cc: Control
         kana = success.kana,
         mailAddress = success.mailAddress,
         // 空の場合は更新前にDBの値に置き換える
-        password = success.newPassword.getOrElse("")
+        password = success.newPassword.getOrElse(""),
+        updateDate = Timestamp.valueOf(LocalDateTime.now())
       )
       db.run(employeeService.edit(employeeRow)).map { _ =>
         Ok(Json.toJson(Map("successes" -> s"${employeeRow.name}さんを更新しました！")))
