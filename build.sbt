@@ -11,4 +11,4 @@ resolvers += Resolver.sonatypeRepo("snapshots")
 
 scalaVersion := "2.12.4"
 
-libraryDependencies ++= backend ++ frontend ++ di ++ test
+libraryDependencies ++= backend ++ security ++ frontend ++ di ++ test

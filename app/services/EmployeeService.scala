@@ -1,9 +1,9 @@
 package services
 
 import javax.inject.Inject
-
 import akka.Done
 import exceptions.OriginalRuntimeException
+import io.github.nremond.SecureHash
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.jdbc.JdbcProfile
 
@@ -23,7 +23,7 @@ class EmployeeService @Inject()(val dbConfigProvider: DatabaseConfigProvider) ex
   def create(employeeRow: EmployeeRow) = {
     (for {
       _ <- validateBeforeCreate(employeeRow.employeeNumber)
-      count <- Employee += employeeRow
+      count <- Employee += employeeRow.copy(password = SecureHash.createHash(employeeRow.password))
     } yield count).transactionally
   }
 
@@ -43,7 +43,7 @@ class EmployeeService @Inject()(val dbConfigProvider: DatabaseConfigProvider) ex
       password <- validateBeforeEdit(employeeRow.employeeNumber)
       _ <- password.flatMap { r =>
         if (employeeRow.password.isEmpty) Employee.filter(_.employeeNumber === employeeRow.employeeNumber).update(employeeRow.copy(password = r))
-        else Employee.filter(_.employeeNumber === employeeRow.employeeNumber).update(employeeRow)
+        else Employee.filter(_.employeeNumber === employeeRow.employeeNumber).update(employeeRow.copy(password = SecureHash.createHash(employeeRow.password)))
       }
     } yield ()).transactionally
   }

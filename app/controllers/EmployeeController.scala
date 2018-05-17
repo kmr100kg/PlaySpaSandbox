@@ -1,7 +1,8 @@
 package controllers
 
+import form.{EmployeeEditForm, EmployeeForm, EmployeeSummary}
+import io.github.nremond.SecureHash
 import javax.inject._
-import form.{EmployeeForm, EmployeeSummary, EmployeeEditForm}
 import play.api.Logger
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import play.api.libs.json.Json

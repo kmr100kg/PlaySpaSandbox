@@ -9,6 +9,10 @@ object Library {
     "com.typesafe.slick" %% "slick-codegen" % "3.2.1"
   )
 
+  val security = Seq(
+    "io.github.nremond" %% "pbkdf2-scala" % "0.6.3"
+  )
+
   val frontend = Seq(
     "org.webjars.bower" % "jquery" % "3.2.1",
     "org.webjars.bower" % "riot-route" % "3.1.1",
