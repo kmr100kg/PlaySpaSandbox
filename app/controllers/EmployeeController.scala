@@ -1,16 +1,16 @@
 package controllers
 
 import java.sql.Timestamp
-import java.time.{LocalDateTime, ZoneId}
+import java.time.LocalDateTime
 
+import exceptions.{MasterAlreadyExistException, MasterNotExistException}
 import form.{EmployeeEditForm, EmployeeForm, EmployeeSummary}
-import io.github.nremond.SecureHash
 import javax.inject._
 import play.api.Logger
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import play.api.libs.json.Json
 import play.api.mvc._
-import services.{EmployeeService, MasterAlreadyExistException, MasterNotExistException}
+import services.EmployeeService
 import slick.jdbc.JdbcProfile
 
 import scala.concurrent.ExecutionContext.Implicits.global

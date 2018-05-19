@@ -1,17 +1,13 @@
 package services
 
-import javax.inject.Inject
 import akka.Done
-import exceptions.OriginalRuntimeException
+import exceptions.{MasterAlreadyExistException, MasterNotExistException}
 import io.github.nremond.SecureHash
+import javax.inject.Inject
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.jdbc.JdbcProfile
 
 import scala.concurrent.ExecutionContext.Implicits.global
-
-class MasterAlreadyExistException extends OriginalRuntimeException
-
-class MasterNotExistException extends OriginalRuntimeException
 
 class EmployeeService @Inject()(val dbConfigProvider: DatabaseConfigProvider) extends HasDatabaseConfigProvider[JdbcProfile] {
 
