@@ -3,7 +3,7 @@ package controllers
 import java.sql.Timestamp
 import java.time.LocalDateTime
 
-import exceptions.{MasterAlreadyExistException, MasterNotExistException}
+import exceptions.{MasterAlreadyExistException, MasterNotExistException, OptimisticLockException}
 import form.{EmployeeEditForm, EmployeeForm, EmployeeSummary}
 import javax.inject._
 import play.api.Logger
@@ -78,6 +78,14 @@ class EmployeeController @Inject()(employeeService: EmployeeService, cc: Control
       )
       db.run(employeeService.edit(employeeRow)).map { _ =>
         Ok(Json.toJson(Map("successes" -> s"${employeeRow.name}さんを更新しました！")))
+      } recover {
+        case _: MasterNotExistException =>
+          BadRequest(Json.toJson(Map("errors" -> "社員が存在しません")))
+        case _: OptimisticLockException =>
+          BadRequest(Json.toJson(Map("errors" -> "あなたが更新する前に他の誰かによって更新されています。画面を再読み込みしてデータを確認してください")))
+        case e: Throwable =>
+          Logger.error("システムエラー", e)
+          InternalServerError
       }
     })
   }

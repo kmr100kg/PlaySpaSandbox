@@ -1,7 +1,7 @@
 package services
 
 import akka.Done
-import exceptions.{MasterAlreadyExistException, MasterNotExistException}
+import exceptions.{MasterAlreadyExistException, MasterNotExistException, OptimisticLockException}
 import io.github.nremond.SecureHash
 import javax.inject.Inject
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
@@ -36,7 +36,7 @@ class EmployeeService @Inject()(val dbConfigProvider: DatabaseConfigProvider) ex
 
   def edit(employeeRow: EmployeeRow) = {
     (for {
-      password <- validateBeforeEdit(employeeRow.employeeNumber)
+      password <- validateBeforeEdit(employeeRow)
       _ <- password.flatMap { r =>
         if (employeeRow.password.isEmpty) Employee.filter(_.employeeNumber === employeeRow.employeeNumber).update(employeeRow.copy(password = r))
         else Employee.filter(_.employeeNumber === employeeRow.employeeNumber).update(employeeRow.copy(password = SecureHash.createHash(employeeRow.password)))
@@ -44,9 +44,12 @@ class EmployeeService @Inject()(val dbConfigProvider: DatabaseConfigProvider) ex
     } yield ()).transactionally
   }
 
-  def validateBeforeEdit(employeeNumber: Int) = {
-    Employee.filter(_.employeeNumber === employeeNumber).result.headOption.map { r =>
+  def validateBeforeEdit(employeeRow: EmployeeRow) = {
+    Employee.filter(_.employeeNumber === employeeRow.employeeNumber).result.headOption.map { r =>
       if (r.isDefined) {
+        if (r.get.updateDate.after(employeeRow.updateDate)) {
+          DBIO.failed(new OptimisticLockException)
+        }
         DBIO.successful(r.get.password)
       } else {
         DBIO.failed(new MasterNotExistException)
