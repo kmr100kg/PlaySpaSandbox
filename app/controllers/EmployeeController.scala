@@ -24,7 +24,7 @@ class EmployeeController @Inject()(employeeService: EmployeeService, cc: Control
 
   def list = Action.async { implicit request =>
     db.run(employeeService.findAll()).map { r =>
-      val summary = r.map(r => EmployeeSummary(r.employeeNumber, r.name, r.kana, r.mailAddress))
+      val summary = r.map(r => EmployeeSummary(r.employeeNumber, r.name, r.kana, r.mailAddress, r.updateDate.toString))
       Ok(Json.toJson(summary))
     }
   }
@@ -74,15 +74,15 @@ class EmployeeController @Inject()(employeeService: EmployeeService, cc: Control
         mailAddress = success.mailAddress,
         // 空の場合は更新前にDBの値に置き換える
         password = success.newPassword.getOrElse(""),
-        updateDate = Timestamp.valueOf(LocalDateTime.now())
+        updateDate = Timestamp.valueOf(success.updateDate)
       )
       db.run(employeeService.edit(employeeRow)).map { _ =>
         Ok(Json.toJson(Map("successes" -> s"${employeeRow.name}さんを更新しました！")))
       } recover {
         case _: MasterNotExistException =>
-          BadRequest(Json.toJson(Map("errors" -> "社員が存在しません")))
+          BadRequest(Json.toJson(Map("errors" -> Seq(("DBエラー", "社員が存在しません")))))
         case _: OptimisticLockException =>
-          BadRequest(Json.toJson(Map("errors" -> "あなたが更新する前に他の誰かによって更新されています。画面を再読み込みしてデータを確認してください")))
+          BadRequest(Json.toJson(Map("errors" -> Seq(("DBエラー", "あなたが更新する前に他の誰かによって更新されています。画面を再読み込みしてデータを確認してください")))))
         case e: Throwable =>
           Logger.error("システムエラー", e)
           InternalServerError
@@ -95,7 +95,7 @@ class EmployeeController @Inject()(employeeService: EmployeeService, cc: Control
       Ok(Json.toJson(Map("successes" -> s"${name}さんを削除しました！")))
     } recover {
       case _: MasterNotExistException =>
-        BadRequest(Json.toJson(Map("errors" -> "社員が存在しません")))
+        BadRequest(Json.toJson(Map("errors" -> Seq(("DBエラー", "社員が存在しません")))))
       case e: Throwable =>
         Logger.error("システムエラー", e)
         InternalServerError
