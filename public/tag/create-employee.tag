@@ -5,9 +5,11 @@
         </h1>
         <form class="ui form error user-form">
             <div class="ui error message" show={errors} id="errorMsgBox">
-                <virtual each={e in errors}>
-                    <div class="header">{e[0]}</div>
-                    <p>{e[1]}</p>
+                <virtual each={values, key in errors}>
+                    <div class="header">{key}</div>
+                    <virtual each={v in values}>
+                        <p>{v}</p>
+                    </virtual>
                 </virtual>
             </div>
             <div class="two fields">
@@ -36,7 +38,7 @@
                     <input placeholder="password" type="password" name="password">
                 </div>
                 <div class="field">
-                    <label>パスワード確認<span class="required-input">*</span></label>
+                    <label>パスワード（確認）<span class="required-input">*</span></label>
                     <input placeholder="password" type="password" name="passwordConfirm">
                 </div>
             </div>
@@ -75,5 +77,6 @@
                 duration: '2s'
             });
         }
+
     </script>
 </create-employee>

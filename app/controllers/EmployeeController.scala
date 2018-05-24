@@ -34,11 +34,7 @@ class EmployeeController @Inject()(employeeService: EmployeeService, messageShar
   def create = Action.async { implicit request =>
     val form = EmployeeForm.form.bindFromRequest
     form.fold(error => {
-      val messages = error.errors.map { e =>
-        val message = cc.messagesApi.preferred(request)
-        (message(e.key), message(e.message))
-      }
-      future(BadRequest(Json.toJson(Map("errors" -> messages))))
+      future(BadRequest(messageSharper.asError(error.errorsAsJson)))
     }, success => {
       val employeeRow = EmployeeRow(
         employeeNumber = success.employeeNumber,
@@ -49,10 +45,10 @@ class EmployeeController @Inject()(employeeService: EmployeeService, messageShar
         updateDate = Timestamp.valueOf(LocalDateTime.now())
       )
       db.run(employeeService.create(employeeRow)).map { _ =>
-        Ok(Json.toJson(Map("successes" -> s"${success.name}さんを登録しました！")))
+        Ok(messageSharper.asSuccess(s"${success.name}さんを登録しました！"))
       } recover {
         case _:MasterAlreadyExistException =>
-          BadRequest(Json.toJson(Map("errors" -> Seq(("DBエラー", "既に登録されています")))))
+          BadRequest(messageSharper.asError(Map("DBエラー" -> Seq("既に登録されています"))))
         case e:Throwable =>
           Logger.error("システムエラー", e)
           InternalServerError
@@ -63,11 +59,7 @@ class EmployeeController @Inject()(employeeService: EmployeeService, messageShar
   def edit = Action.async { implicit request =>
     val form = EmployeeEditForm.form.bindFromRequest
     form.fold(error => {
-      val messages = error.errors.map { e =>
-        val message = cc.messagesApi.preferred(request)
-        (message(e.key), message(e.message))
-      }
-      future(BadRequest(Json.toJson(Map("errors" -> messages))))
+      future(BadRequest(messageSharper.asError(error.errorsAsJson)))
     }, success => {
       val employeeRow = EmployeeRow(
         employeeNumber = success.employeeNumber,
@@ -79,12 +71,12 @@ class EmployeeController @Inject()(employeeService: EmployeeService, messageShar
         updateDate = Timestamp.valueOf(LocalDateTime.now())
       )
       db.run(employeeService.edit(employeeRow)).map { _ =>
-        Ok(Json.toJson(Map("successes" -> s"${employeeRow.name}さんを更新しました！")))
+        Ok(messageSharper.asSuccess(s"${employeeRow.name}さんを更新しました！"))
       } recover {
         case _: MasterNotExistException =>
-          BadRequest(Json.toJson(Map("errors" -> "社員が存在しません")))
+          BadRequest(messageSharper.asError(Map("DBエラー" -> Seq("社員が存在しません"))))
         case _: OptimisticLockException =>
-          BadRequest(Json.toJson(Map("errors" -> "あなたが更新する前に他の誰かによって更新されています。画面を再読み込みしてデータを確認してください")))
+          BadRequest(messageSharper.asError(Map("DBエラー" -> Seq("あなたが更新する前に他の誰かによって更新されています。画面を再読み込みしてデータを確認してください"))))
         case e: Throwable =>
           Logger.error("システムエラー", e)
           InternalServerError
@@ -94,10 +86,10 @@ class EmployeeController @Inject()(employeeService: EmployeeService, messageShar
 
   def delete(employeeNumber: Int) = Action.async { implicit request =>
     db.run(employeeService.delete(employeeNumber)).map { name =>
-      Ok(Json.toJson(Map("successes" -> s"${name}さんを削除しました！")))
+      Ok(messageSharper.asSuccess(s"${name}さんを削除しました！"))
     } recover {
       case _: MasterNotExistException =>
-        BadRequest(Json.toJson(Map("errors" -> "社員が存在しません")))
+        BadRequest(messageSharper.asError(Map("DBエラー" -> Seq("社員が存在しません"))))
       case e: Throwable =>
         Logger.error("システムエラー", e)
         InternalServerError

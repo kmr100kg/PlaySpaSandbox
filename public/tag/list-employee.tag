@@ -6,16 +6,18 @@
         <div class="ui success message" id="successMsgBox" if={successes}>
             <i class="close icon"></i>
             <div class="header">
-                Completed
+                完了
             </div>
             <p>{successes}</p>
         </div>
         <div class="ui error message" id="errorMsgBox" if={errors}>
             <i class="close icon"></i>
-            <div class="header">
-                Failed
-            </div>
-            <p>{errors}</p>
+            <virtual each={values, key in errors}>
+                <div class="header">{key}</div>
+                <virtual each={v in values}>
+                    <p>{v}</p>
+                </virtual>
+            </virtual>
         </div>
         <table class="ui very basic table" id="employeeTable">
             <tr>
@@ -67,9 +69,11 @@
         <div class="content">
             <div class="ui error message" id="editModalErrorMsgBox" if={modalErrors}>
                 <i class="close icon"></i>
-                <virtual each={e in modalErrors}>
-                    <div class="header">{e[0]}</div>
-                    <p>{e[1]}</p>
+                <virtual each={values, key in modalErrors}>
+                    <div class="header">{key}</div>
+                    <virtual each={v in values}>
+                        <p>{v}</p>
+                    </virtual>
                 </virtual>
             </div>
             <div class="ui form" id="editModalForm">
@@ -99,7 +103,7 @@
                         <input type="password" name="newPassword" value={getEditEmp('password')}>
                     </div>
                     <div class="field">
-                        <label>新しいパスワード確認</label>
+                        <label>新しいパスワード（確認）</label>
                         <input type="password" name="newPasswordConfirm" value={getEditEmp('password')}>
                     </div>
                 </div>

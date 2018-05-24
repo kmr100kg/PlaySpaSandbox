@@ -64,10 +64,12 @@ error.path.result.multiple=Multiple results for the given path
 
 # --- --- --- --- --- form name --- --- --- --- ---
 
-# --- ユーザ登録
-employeeNumber=社員番号
-name=氏名
-kana=カナ
-mailAddress=メールアドレス
-password=パスワード
-passwordConfirm=パスワード（確認）
+# --- ユーザ登録/編集
+employeeNumber=1_社員番号
+name=2_氏名
+kana=3_カナ
+mailAddress=4_メールアドレス
+password=5_パスワード
+passwordConfirm=6_パスワード（確認）
+newPassword=7_新しいパスワード
+newPasswordConfirm=8_新しいパスワード（確認）
