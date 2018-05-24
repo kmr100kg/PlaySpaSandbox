@@ -8,7 +8,7 @@ Playframework2.6, RiotJS, SemanticUIを使ったサンプルアプリです。
     * バリデーションあり
     * メッセージを指定した順序通りに出力
     * 更新日時を見る簡単な楽観ロック
-    * ajax通信時にCSRFチェックを行う
+    * ajax通信時のCSRFチェック
 
 ## Running
 
