@@ -3,7 +3,8 @@ var globalErrorHandler = {
         if (xhr.status === 400) {
             return JSON.parse(xhr.responseText)["errors"]
         } else if (xhr.status === 403) {
-            return JSON.parse(xhr.responseText)["errors"]
+            route('/forbidden')
+            return {}
         } else if (xhr.status === 404) {
             route('/notFound')
             return {}
