@@ -8,17 +8,19 @@ import form.{EmployeeEditForm, EmployeeForm, EmployeeSummary}
 import javax.inject._
 import play.api.Logger
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
+import play.api.i18n.I18nSupport
 import play.api.libs.json.Json
 import play.api.mvc._
 import services.EmployeeService
 import slick.jdbc.JdbcProfile
+import utility.MessageSharper
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future.{successful => future}
 
 @Singleton
-class EmployeeController @Inject()(employeeService: EmployeeService, cc: ControllerComponents, val dbConfigProvider: DatabaseConfigProvider) extends
-  AbstractController(cc) with HasDatabaseConfigProvider[JdbcProfile] {
+class EmployeeController @Inject()(employeeService: EmployeeService, messageSharper: MessageSharper, cc: ControllerComponents, val dbConfigProvider: DatabaseConfigProvider) extends
+  AbstractController(cc) with HasDatabaseConfigProvider[JdbcProfile] with I18nSupport {
 
   import model.Tables._
 
