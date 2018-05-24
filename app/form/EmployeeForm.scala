@@ -6,7 +6,7 @@ import play.api.data.validation.Constraints._
 
 case class EmployeeForm(employeeNumber: Int, name: String, kana: String, mailAddress: String, password: String, passwordConfirm: String)
 
-case class EmployeeEditForm(employeeNumber: Int, name: String, kana: String, mailAddress: String, newPassword: Option[String], newPasswordConfirm: Option[String])
+case class EmployeeEditForm(employeeNumber: Int, name: String, kana: String, mailAddress: String, newPassword: Option[String], newPasswordConfirm: Option[String], updateDate: String)
 
 object EmployeeForm {
   val form = Form(
@@ -31,7 +31,8 @@ object EmployeeEditForm {
       "kana" -> nonEmptyText.verifying(pattern("[\u30A1-\u30FC]*".r, error = "must.be.zenkaku.kana")),
       "mailAddress" -> email,
       "newPassword" -> optional(text(minLength = 8)),
-      "newPasswordConfirm" -> optional(text(minLength = 8))
+      "newPasswordConfirm" -> optional(text(minLength = 8)),
+      "updateDate" -> nonEmptyText
     )(EmployeeEditForm.apply)(EmployeeEditForm.unapply).verifying(
       "error.password.not.equals", form => form.newPassword.getOrElse("") == form.newPasswordConfirm.getOrElse("")
     )

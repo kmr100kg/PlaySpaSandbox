@@ -26,7 +26,7 @@ class EmployeeController @Inject()(employeeService: EmployeeService, messageShar
 
   def list = Action.async { implicit request =>
     db.run(employeeService.findAll()).map { r =>
-      val summary = r.map(r => EmployeeSummary(r.employeeNumber, r.name, r.kana, r.mailAddress))
+      val summary = r.map(r => EmployeeSummary(r.employeeNumber, r.name, r.kana, r.mailAddress, r.updateDate.toString))
       Ok(Json.toJson(summary))
     }
   }
@@ -68,7 +68,7 @@ class EmployeeController @Inject()(employeeService: EmployeeService, messageShar
         mailAddress = success.mailAddress,
         // 空の場合は更新前にDBの値に置き換える
         password = success.newPassword.getOrElse(""),
-        updateDate = Timestamp.valueOf(LocalDateTime.now())
+        updateDate = Timestamp.valueOf(success.updateDate)
       )
       db.run(employeeService.edit(employeeRow)).map { _ =>
         Ok(messageSharper.asSuccess(s"${employeeRow.name}さんを更新しました！"))

@@ -25,6 +25,7 @@
                 <th>氏名</th>
                 <th>カナ</th>
                 <th>メールアドレス</th>
+                <th>最終更新日</th>
                 <th>&nbsp;</th>
             </tr>
             <tr each={emp, i in employees} class="emp-row-{i}">
@@ -32,6 +33,7 @@
                 <td>{ emp.name }</td>
                 <td>{ emp.kana }</td>
                 <td>{ emp.mailAddress }</td>
+                <td>{ emp.updateDate }</td>
                 <td class="right aligned">
                     <div class="tiny ui green button" emp-index={i} onclick={popUpEditForm}>編集</div>
                     <div class="tiny ui red button" emp-no={emp.employeeNumber} emp-name={emp.name} onclick={delConfirm}>削除</div>
@@ -107,6 +109,7 @@
                         <input type="password" name="newPasswordConfirm" value={getEditEmp('password')}>
                     </div>
                 </div>
+                <input type="hidden" name="updateDate" value={getEditEmp('updateDate')}>
             </div>
         </div>
         <div class="actions">
@@ -153,6 +156,7 @@
                     name: emp[1].outerText,
                     kana: emp[2].outerText,
                     mailAddress: emp[3].outerText,
+                    updateDate: emp[4].outerText
                 }
             })
             self.modalErrors = null
@@ -171,6 +175,9 @@
                 editedEmp[this.name] = this.value
             })
             $('#editModalForm').find('input:password').each(function () {
+                editedEmp[this.name] = this.value
+            })
+            $('#editModalForm').find('input:hidden').each(function () {
                 editedEmp[this.name] = this.value
             })
 

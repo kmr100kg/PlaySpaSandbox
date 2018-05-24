@@ -1,11 +1,14 @@
 package services
 
+import java.sql.Timestamp
+import java.time.LocalDateTime
+
 import akka.Done
-import exceptions.{MasterAlreadyExistException, MasterNotExistException, OptimisticLockException}
 import io.github.nremond.SecureHash
 import javax.inject.Inject
 import play.api.db.slick.{DatabaseConfigProvider, HasDatabaseConfigProvider}
 import slick.jdbc.JdbcProfile
+import exceptions.{MasterAlreadyExistException, MasterNotExistException, OptimisticLockException}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -26,11 +29,8 @@ class EmployeeService @Inject()(val dbConfigProvider: DatabaseConfigProvider) ex
 
   def validateBeforeCreate(employeeNumber: Int) = {
     Employee.filter(_.employeeNumber === employeeNumber).exists.result.flatMap { isExist =>
-      if (isExist) {
-        DBIO.failed(new MasterAlreadyExistException)
-      } else {
-        DBIO.successful(Done)
-      }
+      if (isExist) DBIO.failed(new MasterAlreadyExistException)
+      else DBIO.successful(Done)
     }
   }
 
@@ -38,8 +38,12 @@ class EmployeeService @Inject()(val dbConfigProvider: DatabaseConfigProvider) ex
     (for {
       password <- validateBeforeEdit(employeeRow)
       _ <- password.flatMap { r =>
-        if (employeeRow.password.isEmpty) Employee.filter(_.employeeNumber === employeeRow.employeeNumber).update(employeeRow.copy(password = r))
-        else Employee.filter(_.employeeNumber === employeeRow.employeeNumber).update(employeeRow.copy(password = SecureHash.createHash(employeeRow.password)))
+        val updateDate = Timestamp.valueOf(LocalDateTime.now())
+        if (employeeRow.password.isEmpty) Employee
+          .filter(_.employeeNumber === employeeRow.employeeNumber)
+          .update(employeeRow.copy(password = r, updateDate = updateDate))
+        else Employee.filter(_.employeeNumber === employeeRow.employeeNumber)
+          .update(employeeRow.copy(password = SecureHash.createHash(employeeRow.password), updateDate = updateDate))
       }
     } yield ()).transactionally
   }
@@ -47,10 +51,8 @@ class EmployeeService @Inject()(val dbConfigProvider: DatabaseConfigProvider) ex
   def validateBeforeEdit(employeeRow: EmployeeRow) = {
     Employee.filter(_.employeeNumber === employeeRow.employeeNumber).result.headOption.map { r =>
       if (r.isDefined) {
-        if (r.get.updateDate.after(employeeRow.updateDate)) {
-          DBIO.failed(new OptimisticLockException)
-        }
-        DBIO.successful(r.get.password)
+        if (r.get.updateDate.equals(employeeRow.updateDate)) DBIO.successful(r.get.password)
+        else DBIO.failed(new OptimisticLockException)
       } else {
         DBIO.failed(new MasterNotExistException)
       }
