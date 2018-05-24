@@ -1,3 +1,3 @@
 package exceptions
 
-class MasterNotExistException extends OriginalRuntimeException
+class MasterNotExistException extends RuntimeException

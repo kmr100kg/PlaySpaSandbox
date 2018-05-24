@@ -1,3 +1,3 @@
 package exceptions
 
-class MasterAlreadyExistException extends OriginalRuntimeException
+class MasterAlreadyExistException extends RuntimeException

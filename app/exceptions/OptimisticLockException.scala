@@ -1,3 +1,3 @@
 package exceptions
 
-class OptimisticLockException extends OriginalRuntimeException
+class OptimisticLockException extends RuntimeException
