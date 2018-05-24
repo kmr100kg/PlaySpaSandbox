@@ -1,4 +1,4 @@
-@()
+@(implicit requestHeader: RequestHeader)
 
 <!DOCTYPE html>
 <html>
@@ -20,8 +20,11 @@
         <script type="riot/tag" src="@routes.Assets.versioned("tag/create-employee.tag")"></script>
         <script type="riot/tag" src="@routes.Assets.versioned("tag/error.tag")"></script>
         <script type="riot/tag" src="@routes.Assets.versioned("tag/not-found.tag")"></script>
+        <script type="riot/tag" src="@routes.Assets.versioned("tag/forbidden.tag")"></script>
 
         <content></content>
+        @helper.CSRF.formField
+
         <script>
             const self = this
 
@@ -48,8 +51,19 @@
                 riot.mount('content', 'not-found')
             })
 
+            route('/forbidden', function () {
+                riot.mount('content', 'forbidden')
+            })
+
 
             route.start(true)
+
+            const token = $('input[name="csrfToken"]').attr('value')
+            $.ajaxSetup({
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('Csrf-Token', token);
+                }
+            });
         </script>
     </body>
 </html>

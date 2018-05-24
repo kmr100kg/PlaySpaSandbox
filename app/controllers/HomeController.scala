@@ -8,7 +8,7 @@ import scala.concurrent.Future.{successful => future}
 class HomeController @Inject()(cc: ControllerComponents) extends AbstractController(cc) {
 
   def index = Action.async { implicit request =>
-    future(Ok(views.html.index()))
+    future(Ok(views.html.index(request)))
   }
 
 }
