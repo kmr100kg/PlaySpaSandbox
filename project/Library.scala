@@ -9,7 +9,8 @@ object Library {
     "com.typesafe.slick" %% "slick" % "3.2.1",
     "com.typesafe.slick" %% "slick-hikaricp" % "3.2.1",
     "com.typesafe.slick" %% "slick-codegen" % "3.2.1",
-    "io.strongtyped" %% "active-slick" % "0.3.5"
+    "io.strongtyped" %% "active-slick" % "0.3.5",
+    "com.github.pathikrit" %% "better-files" % "3.5.0"
   )
 
   val security = Seq(
