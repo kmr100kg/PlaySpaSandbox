@@ -1,14 +1,21 @@
 var globalErrorHandler = {
-    handle: function(xhr) {
+    handle: function(xhr, doSomethingBeforeJump) {
+        if (doSomethingBeforeJump === null || doSomethingBeforeJump === undefined) {
+            doSomethingBeforeJump = function () {}
+        }
+
         if (xhr.status === 400) {
             return JSON.parse(xhr.responseText)["errors"]
         } else if (xhr.status === 403) {
+            doSomethingBeforeJump()
             route('/forbidden')
             return {}
         } else if (xhr.status === 404) {
+            doSomethingBeforeJump()
             route('/notFound')
             return {}
         } else {
+            doSomethingBeforeJump()
             route('/error')
             return {}
         }
