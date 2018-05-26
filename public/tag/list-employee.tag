@@ -195,7 +195,9 @@
                 $('#editModal').modal('hide');
                 fadeMessage('successMsgBox')
             }).fail(function (xhr) {
-                self.modalErrors = self.globalErrorHandler.handle(xhr)
+                self.modalErrors = self.globalErrorHandler.handle(xhr, function () {
+                    $('#editModal').modal('hide');
+                })
                 self.update()
                 fadeMessage('editModalErrorMsgBox')
             }).always(function () {
