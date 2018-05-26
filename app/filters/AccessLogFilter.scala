@@ -1,7 +1,9 @@
 package filters
 
 import javax.inject._
+import play.api.Logger
 import play.api.mvc._
+
 import scala.concurrent.ExecutionContext
 
 /**
@@ -13,10 +15,13 @@ import scala.concurrent.ExecutionContext
  * It is used below by the `map` method.
  */
 @Singleton
-class ExampleFilter @Inject()(implicit ec: ExecutionContext) extends EssentialFilter {
+class AccessLogFilter @Inject()(implicit ec: ExecutionContext) extends EssentialFilter {
   override def apply(next: EssentialAction) = EssentialAction { request =>
     next(request).map { result =>
-      result.withHeaders("X-ExampleFilter" -> "foo")
+      val log = s"${request.id} ${request.host} ${request.remoteAddress} ${request.contentType.getOrElse("")} " +
+        s"${request.method} ${request.uri} ${request.rawQueryString}"
+      Logger.apply("access").logger.info(log)
+      result
     }
   }
 }
