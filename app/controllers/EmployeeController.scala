@@ -45,7 +45,7 @@ class EmployeeController @Inject()(employeeService: EmployeeService, messageShar
         updateDate = Timestamp.valueOf(LocalDateTime.now())
       )
       db.run(employeeService.create(employeeRow)).map { _ =>
-        Ok(messageSharper.asSuccess(s"${success.name}さんを登録しました！"))
+        Created(messageSharper.asSuccess(s"${success.name}さんを登録しました！"))
       } recover {
         case _:MasterAlreadyExistException =>
           BadRequest(messageSharper.asError(Map("DBエラー" -> Seq("既に登録されています"))))
