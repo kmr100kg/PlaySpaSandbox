@@ -176,13 +176,7 @@
         edit()
         {
             const editedEmp = {}
-            $('#editModalForm').find('input:text').each(function () {
-                editedEmp[this.name] = this.value
-            })
-            $('#editModalForm').find('input:password').each(function () {
-                editedEmp[this.name] = this.value
-            })
-            $('#editModalForm').find('input:hidden').each(function () {
+            $('#editModalForm').find('input:text, input:password, input:hidden').each(function () {
                 editedEmp[this.name] = this.value
             })
 
