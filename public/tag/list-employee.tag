@@ -165,6 +165,11 @@
             $('#editModal').modal({
                 // マルチディスプレイ使用時でもズレなくなる
                 observeChanges: true
+            }).modal({
+                onHidden: function () {
+                    self.editEmp = null
+                    self.update()
+                }
             }).modal('show');
         }
 
