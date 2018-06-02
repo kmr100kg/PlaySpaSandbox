@@ -35,6 +35,7 @@
                 <td>{ emp.mailAddress }</td>
                 <td>{ emp.updateDate }</td>
                 <td class="right aligned">
+                    <div class="tiny ui blue button" emp-index={i} onclick={jumpToAttendance}>勤怠</div>
                     <div class="tiny ui green button" emp-index={i} onclick={popUpEditForm}>編集</div>
                     <div class="tiny ui red button" emp-no={emp.employeeNumber} emp-name={emp.name} onclick={delConfirm}>削除</div>
                 </td>
@@ -243,6 +244,11 @@
                 self.update()
                 fadeMessage('successMsgBox')
             }
+        }
+
+        jumpToAttendance()
+        {
+            route('/attendance')
         }
 
         getEditEmp(propertyName)
