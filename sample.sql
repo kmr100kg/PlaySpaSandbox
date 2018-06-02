@@ -1,7 +1,5 @@
 create database playsample;
 
-alter database playsample character set utf8;
-
 use playsample;
 
 create table employee(
@@ -13,13 +11,13 @@ create table employee(
   update_date timestamp not null
 );
 
-insert into employee values(1, 'サンプル一郎', 'サンプルイチロウ', 'sample1@mail.co.jp', 'test1234', now());
-insert into employee values(2, 'サンプル二郎', 'サンプルジロウ', 'sample2@mail.co.jp', 'test1234', now());
-insert into employee values(3, 'サンプル三郎', 'サンプルサブロウ', 'sample3@mail.co.jp', 'test1234', now());
-insert into employee values(4, 'サンプル四郎', 'サンプルシロウ', 'sample4@mail.co.jp', 'test1234', now());
-insert into employee values(5, 'サンプル五郎', 'サンプルゴロウ', 'sample5@mail.co.jp', 'test1234', now());
-insert into employee values(6, 'サンプル六郎', 'サンプルロクロウ', 'sample6@mail.co.jp', 'test1234', now());
-insert into employee values(7, 'サンプル七郎', 'サンプルナナロウ', 'sample7@mail.co.jp', 'test1234', now());
-insert into employee values(8, 'サンプル八郎', 'サンプルハチロウ', 'sample8@mail.co.jp', 'test1234', now());
-insert into employee values(9, 'サンプル九郎', 'サンプルクロウ', 'sample9@mail.co.jp', 'test1234', now());
-insert into employee values(10, 'サンプル十郎', 'サンプルジュウロウ', 'sample10@mail.co.jp', 'test1234', now());
+insert into employee values(1, 'レベッカ宮本', 'レベッカミヤモト', 'rebecca_miyamoto@mail.co.jp', 'test1234', now());
+insert into employee values(2, '橘玲', 'タチバナレイ', 'tachibana_rei@mail.co.jp', 'test1234', now());
+insert into employee values(3, '片桐姫子', 'カタギリヒメコ', 'katagiri_himeko@mail.co.jp', 'test1234', now());
+insert into employee values(4, '桃瀬くるみ', 'モモセクルミ', 'momose_kurumi@mail.co.jp', 'test1234', now());
+insert into employee values(5, '上原都', 'ウエハラミヤコ', 'uehara_miyako@mail.co.jp', 'test1234', now());
+insert into employee values(6, '一条', 'イチジョウ', 'itijou@mail.co.jp', 'test1234', now());
+insert into employee values(7, '鈴木さやか', '鈴木さやか', 'suzuki_sayaka@mail.co.jp', 'test1234', now());
+insert into employee values(8, '柏木優麻', 'カシワギユウマ', 'kashiwagi_yuuma@mail.co.jp', 'test1234', now());
+insert into employee values(9, '芹沢茜', 'セリザワアカネ', 'serizawa_akane@mail.co.jp', 'test1234', now());
+insert into employee values(10, 'メディア', 'メディア', 'media@mail.co.jp', 'test1234', now());
