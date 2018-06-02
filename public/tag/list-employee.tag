@@ -28,7 +28,7 @@
                 <th>最終更新日</th>
                 <th>&nbsp;</th>
             </tr>
-            <tr each={emp, i in employees} class="emp-row-{i}">
+            <tr each={emp, i in employees} class="emp-row-{i}" onmouseover="style.background='#efffc4'" onmouseout="style.background='#ffffff'">
                 <td>{ emp.employeeNumber }</td>
                 <td>{ emp.name }</td>
                 <td>{ emp.kana }</td>
