@@ -15,7 +15,7 @@
             <div class="two fields">
                 <div class="field">
                     <label>社員番号<span class="required-input">*</span></label>
-                    <input placeholder="半角数字" type="text" name="employeeNumber" value={preparedData.nextEmployeeNumber}>
+                    <input placeholder="半角数字" type="text" name="employeeNumber" value={getPreparedData('nextEmployeeNumber')}>
                 </div>
                 <div class="field">
                     <label>名前<span class="required-input">*</span></label>
@@ -97,6 +97,15 @@
                 animation: 'fade in',
                 duration: '2s'
             });
+        }
+
+        getPreparedData(key)
+        {
+            const data = self.preparedData
+            if (data === null || data === undefined) {
+                return ""
+            }
+            return data[key]
         }
 
     </script>
