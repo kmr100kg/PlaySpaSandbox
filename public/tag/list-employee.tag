@@ -218,6 +218,9 @@
 
         del(e)
         {
+            // 一覧ページに出ているメッセージを削除
+            self.successes = null
+            self.errors = null
             const employeeNumber = e.currentTarget.getAttribute('emp-no')
             $.ajax({
                 type: 'GET',
