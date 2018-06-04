@@ -35,10 +35,13 @@ var globalMessage = {
     }
 }
 
-function fadeMessage(id)
-{
+function fadeMessage(id) {
     $('#' + id).transition({
         animation: 'fade in',
         duration: '2s'
     });
+}
+
+function scrollTop() {
+    $('html,body').animate({scrollTop: 0}, 500, 'swing');
 }
