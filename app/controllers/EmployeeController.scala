@@ -31,6 +31,15 @@ class EmployeeController @Inject()(employeeService: EmployeeService, messageShar
     }
   }
 
+  def prepareCreate = Action.async { implicit request =>
+    db.run(employeeService.findBeforeCreate()).map { r =>
+      val preparedData = Map(
+        "nextEmployeeNumber" -> r.toString
+      )
+      Ok(Json.toJson(preparedData))
+    }
+  }
+
   def create = Action.async { implicit request =>
     val form = EmployeeForm.form.bindFromRequest
     form.fold(error => {

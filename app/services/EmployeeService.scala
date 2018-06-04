@@ -19,6 +19,12 @@ class EmployeeService @Inject()(val dbConfigProvider: DatabaseConfigProvider) ex
 
   def findAll() = Employee.result
 
+  def findBeforeCreate() = {
+    for {
+      nextEmployeeNumber <- Employee.map(_.employeeNumber).max.result
+    } yield nextEmployeeNumber.getOrElse(0) + 1
+  }
+
   def create(employeeRow: EmployeeRow) = {
     (for {
       _ <- validateBeforeCreate(employeeRow.employeeNumber)

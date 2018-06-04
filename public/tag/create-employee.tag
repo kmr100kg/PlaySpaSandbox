@@ -15,7 +15,7 @@
             <div class="two fields">
                 <div class="field">
                     <label>社員番号<span class="required-input">*</span></label>
-                    <input placeholder="半角数字" type="text" name="employeeNumber">
+                    <input placeholder="半角数字" type="text" name="employeeNumber" value={preparedData.nextEmployeeNumber}>
                 </div>
                 <div class="field">
                     <label>名前<span class="required-input">*</span></label>
@@ -48,6 +48,27 @@
 
     <script>
         const self = this
+
+        self.on("mount", function () {
+            self.prepareCreate()
+        })
+
+        prepareCreate()
+        {
+            $.ajax({
+                type: 'GET',
+                url: '/prepareCreate',
+                contentType: 'application/json',
+                dataType: 'json'
+            }).done(function (data) {
+                self.preparedData = data
+            }).fail(function (xhr) {
+                self.errors = self.globalErrorHandler.handle(xhr)
+            }).always(function () {
+                self.update()
+            })
+        }
+
         create()
         {
             const userForm = {}

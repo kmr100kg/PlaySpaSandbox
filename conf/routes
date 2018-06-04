@@ -6,6 +6,8 @@ GET     /                           controllers.HomeController.index
 
 GET     /list                       controllers.EmployeeController.list
 
+GET     /prepareCreate              controllers.EmployeeController.prepareCreate
+
 POST    /create                     controllers.EmployeeController.create
 
 POST    /edit                       controllers.EmployeeController.edit
