@@ -19,13 +19,13 @@
                 </div>
                 <div class="field">
                     <label>名前<span class="required-input">*</span></label>
-                    <input placeholder="サンプル太郎" type="text" name="name">
+                    <input placeholder="サンプル太郎" type="text" name="name" id="name">
                 </div>
             </div>
             <div class="two fields">
                 <div class="field">
                     <label>カナ<span class="required-input">*</span></label>
-                    <input placeholder="サンプルタロウ" type="text" name="kana">
+                    <input placeholder="サンプルタロウ" type="text" name="kana" id="kana">
                 </div>
                 <div class="field">
                     <label>メールアドレス<span class="required-input">*</span></label>
@@ -51,6 +51,15 @@
 
         self.on("mount", function () {
             self.prepareCreate()
+            $('#gender').dropdown({
+                allowAdditions: true
+            });
+
+            $(function() {
+                $.fn.autoKana('#name', '#kana', {
+                    katakana : true
+                });
+            });
         })
 
         prepareCreate()
