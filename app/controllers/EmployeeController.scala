@@ -68,7 +68,7 @@ class EmployeeController @Inject()(employeeService: EmployeeService, messageShar
   def edit = Action.async { implicit request =>
     val form = EmployeeEditForm.form.bindFromRequest
     form.fold(error => {
-      future(BadRequest(messageSharper.asError(error.errorsAsJson)))
+      future(BadRequest(messageSharper.asErrorReshaped(error.errorsAsJson)))
     }, success => {
       val employeeRow = EmployeeRow(
         employeeNumber = success.employeeNumber,
