@@ -3,46 +3,92 @@
         <h1>
             社員登録
         </h1>
-        <form class="ui form error user-form">
-            <div class="ui error message" show={errors} id="errorMsgBox">
-                <virtual each={values, key in errors}>
-                    <div class="header">{key}</div>
-                    <virtual each={v in values}>
-                        <p>{v}</p>
-                    </virtual>
-                </virtual>
+        <div class="ui pointing menu">
+            <a class="item active" data-tab="first">基本情報</a>
+            <a class="item" data-tab="second">詳細情報</a>
+        </div>
+        <div class="ui bottom attached tab active" data-tab="first">
+            <form class="ui form user-form">
+                <div class="two fields">
+                    <div class="field" id="employeeNumberField">
+                        <label>社員番号<span class="required-input">*</span></label>
+                        <input placeholder="半角数字" type="text" name="employeeNumber" value={getPreparedData('nextEmployeeNumber')}>
+                        <div class="ui pointing red basic label" if={isErrorField("employeeNumber")}>
+                            <virtual each={e in errors["employeeNumber"]}>
+                                <p>{e}</p>
+                            </virtual>
+                        </div>
+                    </div>
+                    <div class="field" id="nameField">
+                        <label>名前<span class="required-input">*</span></label>
+                        <input placeholder="サンプル太郎" type="text" name="name" id="name">
+                        <div class="ui pointing red basic label" if={isErrorField("name")}>
+                            <virtual each={e in errors["name"]}>
+                            <p>{e}</p>
+                            </virtual>
+                        </div>
+                    </div>
+                </div>
+                <div class="two fields">
+                    <div class="field" id="kanaField">
+                        <label>カナ<span class="required-input">*</span></label>
+                        <input placeholder="サンプルタロウ" type="text" name="kana" id="kana">
+                        <div class="ui pointing red basic label" if={isErrorField("kana")}>
+                            <virtual each={e in errors["kana"]}>
+                            <p>{e}</p>
+                            </virtual>
+                        </div>
+                    </div>
+                    <div class="field" id="mailAddressField">
+                        <label>メールアドレス<span class="required-input">*</span></label>
+                        <input placeholder="hoge@sample.co.jp" type="text" name="mailAddress">
+                        <div class="ui pointing red basic label" if={isErrorField("mailAddress")}>
+                            <virtual each={e in errors["mailAddress"]}>
+                            <p>{e}</p>
+                            </virtual>
+                        </div>
+                    </div>
+                </div>
+                <div class="two fields">
+                    <div class="field" id="passwordField">
+                        <label>パスワード<span class="required-input">*</span></label>
+                        <input placeholder="password" type="password" name="password">
+                        <div class="ui pointing red basic label" if={isErrorField("password")}>
+                            <virtual each={e in errors["password"]}>
+                            <p>{e}</p>
+                            </virtual>
+                        </div>
+                    </div>
+                    <div class="field" id="passwordConfirmField">
+                        <label>パスワード（確認）<span class="required-input">*</span></label>
+                        <input placeholder="password" type="password" name="passwordConfirm">
+                        <div class="ui pointing red basic label" if={isErrorField("passwordConfirm")}>
+                            <virtual each={e in errors["passwordConfirm"]}>
+                            <p>{e}</p>
+                            </virtual>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="ui bottom attached tab" data-tab="second">
+        <div class="ui form">
+            <div class="field">
+                <label>性別</label>
+                <div class="inline fields">
+                    <div class="ui selection dropdown" id="gender">
+                        <input type="hidden" name="gender">
+                        <i class="dropdown icon"></i>
+                        <div class="default text">Gender</div>
+                        <div class="menu">
+                            <div class="item" data-value="1">男性</div>
+                            <div class="item" data-value="0">女性</div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="two fields">
-                <div class="field">
-                    <label>社員番号<span class="required-input">*</span></label>
-                    <input placeholder="半角数字" type="text" name="employeeNumber" value={getPreparedData('nextEmployeeNumber')}>
-                </div>
-                <div class="field">
-                    <label>名前<span class="required-input">*</span></label>
-                    <input placeholder="サンプル太郎" type="text" name="name" id="name">
-                </div>
-            </div>
-            <div class="two fields">
-                <div class="field">
-                    <label>カナ<span class="required-input">*</span></label>
-                    <input placeholder="サンプルタロウ" type="text" name="kana" id="kana">
-                </div>
-                <div class="field">
-                    <label>メールアドレス<span class="required-input">*</span></label>
-                    <input placeholder="hoge@sample.co.jp" type="text" name="mailAddress">
-                </div>
-            </div>
-            <div class="two fields">
-                <div class="field">
-                    <label>パスワード<span class="required-input">*</span></label>
-                    <input placeholder="password" type="password" name="password">
-                </div>
-                <div class="field">
-                    <label>パスワード（確認）<span class="required-input">*</span></label>
-                    <input placeholder="password" type="password" name="passwordConfirm">
-                </div>
-            </div>
-        </form>
+        </div>
+        </div>
         <button class="ui button primary" onclick={create}>登録</button>
     </div>
 
@@ -51,6 +97,9 @@
 
         self.on("mount", function () {
             self.prepareCreate()
+
+            $('.menu .item').tab();
+
             $('#gender').dropdown({
                 allowAdditions: true
             });
@@ -80,6 +129,7 @@
 
         create()
         {
+            self.removeErrorClass()
             const userForm = {}
             $('input[name]').toArray().forEach(function (input) {
                 const name = input.name
@@ -101,11 +151,19 @@
         dispMessage(msg)
         {
             self.errors = msg
+            for (key in self.errors) {
+                $('#' + key + 'Field').addClass('error')
+            }
             self.update()
-            $('#errorMsgBox').transition({
-                animation: 'fade in',
-                duration: '2s'
-            });
+        }
+
+        removeErrorClass()
+        {
+            if (self.errors !== null && self.errors !== undefined) {
+                for (key in self.errors) {
+                    $('#' + key + 'Field').removeClass('error')
+                }
+            }
         }
 
         getPreparedData(key)
@@ -115,6 +173,15 @@
                 return ""
             }
             return data[key]
+        }
+
+        isErrorField(key)
+        {
+            if (self.errors !== null && self.errors !== undefined && self.errors[key] !== undefined) {
+                return true
+            } else {
+                return false
+            }
         }
 
     </script>
