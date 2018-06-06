@@ -31,6 +31,10 @@ class MessageSharper @Inject()(implicit val messagesApi: MessagesApi) {
   }
 
   def asSuccess(jsValue: JsValue): JsValue = {
+    Json.toJson(Map(SUCCESS_KEY -> jsValue))
+  }
+
+  def asSuccessReshaped(jsValue: JsValue): JsValue = {
     Json.toJson(Map(SUCCESS_KEY -> reshape(jsValue)))
   }
 
@@ -43,6 +47,10 @@ class MessageSharper @Inject()(implicit val messagesApi: MessagesApi) {
   }
 
   def asError(jsValue: JsValue): JsValue = {
+    Json.toJson(Map(ERROR_KEY -> jsValue))
+  }
+
+  def asErrorReshaped(jsValue: JsValue): JsValue = {
     Json.toJson(Map(ERROR_KEY -> reshape(jsValue)))
   }
 
