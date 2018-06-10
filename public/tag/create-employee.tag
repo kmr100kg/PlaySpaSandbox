@@ -9,6 +9,7 @@
         <div class="ui pointing menu">
             <a class="item active" data-tab="first">基本情報</a>
             <a class="item" data-tab="second">詳細情報</a>
+            <a class="item" data-tab="third">所属情報</a>
         </div>
         <div class="ui bottom attached tab active" data-tab="first">
             <form class="ui form user-form">
@@ -75,43 +76,53 @@
             </form>
         </div>
         <div class="ui bottom attached tab" data-tab="second">
-        <div class="ui form">
-            <div class="two fields">
-                <div class="three wide field">
-                    <label>性別<span class="required-input">*</span></label>
-                    <div class="ui selection dropdown" id="gender">
-                        <input type="hidden" name="gender">
-                        <i class="dropdown icon"></i>
-                        <div class="default text">性別</div>
-                        <div class="menu">
-                            <div class="item" data-value="1">男性</div>
-                            <div class="item" data-value="0">女性</div>
-                            <div class="item" data-value="2">ひ・み・つ</div>
+            <div class="ui form">
+                <div class="two fields">
+                    <div class="three wide field">
+                        <label>性別<span class="required-input">*</span></label>
+                        <div class="ui selection dropdown" id="gender">
+                            <input type="hidden" name="gender">
+                            <i class="dropdown icon"></i>
+                            <div class="default text">性別</div>
+                            <div class="menu">
+                                <div class="item" data-value="1">男性</div>
+                                <div class="item" data-value="0">女性</div>
+                                <div class="item" data-value="2">ひ・み・つ</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="three wide field">
+                        <label>生年月日<span class="required-input">*</span></label>
+                        <div class="ui calendar" id="calendar1">
+                            <div class="ui input left icon">
+                                <i class="calendar icon"></i>
+                                <input type="text" placeholder="yyyy/MM/dd" name="birthday">
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="three wide field">
-                    <label>生年月日<span class="required-input">*</span></label>
-                    <div class="ui calendar" id="calendar1">
-                        <div class="ui input left icon">
-                            <i class="calendar icon"></i>
-                            <input type="text" placeholder="yyyy/MM/dd" name="birthday">
-                        </div>
+                <div class="two fields">
+                    <div class="three wide field">
+                        <label>郵便番号<span class="required-input">*</span></label>
+                        <input placeholder="1234567" type="text" name="zip"
+                               onKeyUp="AjaxZip3.zip2addr(this,'','address','address');">
+                    </div>
+                    <div class="thirteen wide field">
+                        <label>住所（番地まで入力してください）<span class="required-input">*</span></label>
+                        <input placeholder="東京都港区芝公園４丁目２−８" type="text" name="address">
                     </div>
                 </div>
-            </div>
-            <div class="two fields">
-                <div class="three wide field">
-                    <label>郵便番号<span class="required-input">*</span></label>
-                    <input placeholder="1234567" type="text" name="zip" onKeyUp="AjaxZip3.zip2addr(this,'','address','address');">
-                </div>
-                <div class="thirteen wide field">
-                    <label>住所（番地まで入力してください）<span class="required-input">*</span></label>
-                    <input placeholder="東京都港区芝公園４丁目２−８" type="text" name="address">
+                <div class="field">
+                    <label>備考</label>
+                    <textarea class="ui text-area"></textarea>
                 </div>
             </div>
         </div>
+        <div class="ui bottom attached tab" data-tab="third">
+            <div class="ui form">
+            </div>
         </div>
+        <p/>
         <button class="ui button primary" onclick={create}>登録</button>
     </div>
 

@@ -50,10 +50,14 @@ class EmployeeController @Inject()(employeeService: EmployeeService, messageShar
         name = success.name,
         kana = success.kana,
         mailAddress = success.mailAddress,
+        updateDate = Timestamp.valueOf(LocalDateTime.now())
+      )
+      val passwordRow = PasswordRow(
+        employeeNumber = success.employeeNumber,
         password = success.password,
         updateDate = Timestamp.valueOf(LocalDateTime.now())
       )
-      db.run(employeeService.create(employeeRow)).map { _ =>
+      db.run(employeeService.create(employeeRow, passwordRow)).map { _ =>
         Created(messageSharper.asSuccess(s"${success.name}さんを登録しました！"))
       } recover {
         case _:MasterAlreadyExistException =>
@@ -75,11 +79,15 @@ class EmployeeController @Inject()(employeeService: EmployeeService, messageShar
         name = success.name,
         kana = success.kana,
         mailAddress = success.mailAddress,
-        // 空の場合は更新前にDBの値に置き換える
-        password = success.newPassword.getOrElse(""),
         updateDate = Timestamp.valueOf(success.updateDate)
       )
-      db.run(employeeService.edit(employeeRow)).map { _ =>
+      val passwordRow = PasswordRow(
+        employeeNumber = success.employeeNumber,
+        // 空文字の場合は更新しない
+        password = success.newPassword.getOrElse(""),
+        updateDate = Timestamp.valueOf(LocalDateTime.now())
+      )
+      db.run(employeeService.edit(employeeRow, passwordRow)).map { _ =>
         Ok(messageSharper.asSuccess(s"${employeeRow.name}さんを更新しました！"))
       } recover {
         case _: MasterNotExistException =>

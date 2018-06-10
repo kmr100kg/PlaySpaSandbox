@@ -25,11 +25,12 @@ class EmployeeService @Inject()(val dbConfigProvider: DatabaseConfigProvider) ex
     } yield nextEmployeeNumber.getOrElse(0) + 1
   }
 
-  def create(employeeRow: EmployeeRow) = {
+  def create(employeeRow: EmployeeRow, passwordRow: PasswordRow) = {
     (for {
       _ <- validateBeforeCreate(employeeRow.employeeNumber)
-      count <- Employee += employeeRow.copy(password = SecureHash.createHash(employeeRow.password))
-    } yield count).transactionally
+      _ <- Employee += employeeRow
+      _ <- Password += passwordRow
+    } yield ()).transactionally
   }
 
 
@@ -40,16 +41,16 @@ class EmployeeService @Inject()(val dbConfigProvider: DatabaseConfigProvider) ex
     }
   }
 
-  def edit(employeeRow: EmployeeRow) = {
+  def edit(employeeRow: EmployeeRow, passwordRow: PasswordRow) = {
     (for {
-      password <- validateBeforeEdit(employeeRow)
-      _ <- password.flatMap { r =>
+      _ <- validateBeforeEdit(employeeRow)
+      _ <- {
+        // パスワードが変更されていれば更新する
+        if (passwordRow.password != "") {
+          Password.filter(_.employeeNumber === employeeRow.employeeNumber).update(passwordRow)
+        }
         val updateDate = Timestamp.valueOf(LocalDateTime.now())
-        if (employeeRow.password.isEmpty) Employee
-          .filter(_.employeeNumber === employeeRow.employeeNumber)
-          .update(employeeRow.copy(password = r, updateDate = updateDate))
-        else Employee.filter(_.employeeNumber === employeeRow.employeeNumber)
-          .update(employeeRow.copy(password = SecureHash.createHash(employeeRow.password), updateDate = updateDate))
+        Employee.filter(_.employeeNumber === employeeRow.employeeNumber).update(employeeRow.copy(updateDate = updateDate))
       }
     } yield ()).transactionally
   }
@@ -57,7 +58,7 @@ class EmployeeService @Inject()(val dbConfigProvider: DatabaseConfigProvider) ex
   def validateBeforeEdit(employeeRow: EmployeeRow) = {
     Employee.filter(_.employeeNumber === employeeRow.employeeNumber).result.headOption.map { r =>
       if (r.isDefined) {
-        if (r.get.updateDate.equals(employeeRow.updateDate)) DBIO.successful(r.get.password)
+        if (r.get.updateDate.equals(employeeRow.updateDate)) DBIO.successful(Done)
         else DBIO.failed(new OptimisticLockException)
       } else {
         DBIO.failed(new MasterNotExistException)
