@@ -29,7 +29,12 @@ create table employee_detail(
 );
 
 create table department(
-  code varchar(255) primary key,
+  id int primary key,
+  name varchar(255) not null
+);
+
+create table employee_position(
+  id int primary key,
   name varchar(255) not null
 );
 
@@ -65,3 +70,18 @@ insert into employee_detail values (7, 17, '女性', '105-0011', '東京都港�
 insert into employee_detail values (8, 17, '女性', '105-0011', '東京都港区芝公園４丁目２−８');
 insert into employee_detail values (9, 17, '女性', '105-0011', '東京都港区芝公園４丁目２−８');
 insert into employee_detail values (10, 17, '女性', '105-0011', '東京都港区芝公園４丁目２−８');
+
+insert into department values(1, '役員');
+insert into department values(2, 'ソフトウェア開発部');
+insert into department values(3, 'ハードウェア開発部');
+insert into department values(4, '営業部');
+insert into department values(5, '総務部');
+
+insert into employee_position values(1, '社長');
+insert into employee_position values(2, '常務');
+insert into employee_position values(3, '部長');
+insert into employee_position values(4, '課長');
+insert into employee_position values(5, '平社員');
+insert into employee_position values(6, '下っ端');
+insert into employee_position values(7, '内定者');
+insert into employee_position values(8, 'インターン');

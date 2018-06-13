@@ -14,27 +14,27 @@ trait Tables {
   import slick.jdbc.{GetResult => GR}
 
   /** DDL for all tables. Call .create to execute. */
-  lazy val schema: profile.SchemaDescription = Department.schema ++ Employee.schema ++ EmployeeDetail.schema ++ Password.schema
+  lazy val schema: profile.SchemaDescription = Department.schema ++ Employee.schema ++ EmployeeDetail.schema ++ EmployeePosition.schema ++ Password.schema
   @deprecated("Use .schema instead of .ddl", "3.0")
   def ddl = schema
 
   /** Entity class storing rows of table Department
-   *  @param code Database column code SqlType(VARCHAR), PrimaryKey, Length(255,true)
+   *  @param id Database column id SqlType(INT), PrimaryKey
    *  @param name Database column name SqlType(VARCHAR), Length(255,true) */
-  case class DepartmentRow(code: String, name: String)
+  case class DepartmentRow(id: Int, name: String)
   /** GetResult implicit for fetching DepartmentRow objects using plain SQL queries */
-  implicit def GetResultDepartmentRow(implicit e0: GR[String]): GR[DepartmentRow] = GR{
+  implicit def GetResultDepartmentRow(implicit e0: GR[Int], e1: GR[String]): GR[DepartmentRow] = GR{
     prs => import prs._
-    DepartmentRow.tupled((<<[String], <<[String]))
+    DepartmentRow.tupled((<<[Int], <<[String]))
   }
   /** Table description of table department. Objects of this class serve as prototypes for rows in queries. */
   class Department(_tableTag: Tag) extends profile.api.Table[DepartmentRow](_tableTag, Some("playsample"), "department") {
-    def * = (code, name) <> (DepartmentRow.tupled, DepartmentRow.unapply)
+    def * = (id, name) <> (DepartmentRow.tupled, DepartmentRow.unapply)
     /** Maps whole row to an option. Useful for outer joins. */
-    def ? = (Rep.Some(code), Rep.Some(name)).shaped.<>({r=>import r._; _1.map(_=> DepartmentRow.tupled((_1.get, _2.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+    def ? = (Rep.Some(id), Rep.Some(name)).shaped.<>({r=>import r._; _1.map(_=> DepartmentRow.tupled((_1.get, _2.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
 
-    /** Database column code SqlType(VARCHAR), PrimaryKey, Length(255,true) */
-    val code: Rep[String] = column[String]("code", O.PrimaryKey, O.Length(255,varying=true))
+    /** Database column id SqlType(INT), PrimaryKey */
+    val id: Rep[Int] = column[Int]("id", O.PrimaryKey)
     /** Database column name SqlType(VARCHAR), Length(255,true) */
     val name: Rep[String] = column[String]("name", O.Length(255,varying=true))
   }
@@ -107,6 +107,29 @@ trait Tables {
   }
   /** Collection-like TableQuery object for table EmployeeDetail */
   lazy val EmployeeDetail = new TableQuery(tag => new EmployeeDetail(tag))
+
+  /** Entity class storing rows of table EmployeePosition
+   *  @param id Database column id SqlType(INT), PrimaryKey
+   *  @param name Database column name SqlType(VARCHAR), Length(255,true) */
+  case class EmployeePositionRow(id: Int, name: String)
+  /** GetResult implicit for fetching EmployeePositionRow objects using plain SQL queries */
+  implicit def GetResultEmployeePositionRow(implicit e0: GR[Int], e1: GR[String]): GR[EmployeePositionRow] = GR{
+    prs => import prs._
+    EmployeePositionRow.tupled((<<[Int], <<[String]))
+  }
+  /** Table description of table employee_position. Objects of this class serve as prototypes for rows in queries. */
+  class EmployeePosition(_tableTag: Tag) extends profile.api.Table[EmployeePositionRow](_tableTag, Some("playsample"), "employee_position") {
+    def * = (id, name) <> (EmployeePositionRow.tupled, EmployeePositionRow.unapply)
+    /** Maps whole row to an option. Useful for outer joins. */
+    def ? = (Rep.Some(id), Rep.Some(name)).shaped.<>({r=>import r._; _1.map(_=> EmployeePositionRow.tupled((_1.get, _2.get)))}, (_:Any) =>  throw new Exception("Inserting into ? projection not supported."))
+
+    /** Database column id SqlType(INT), PrimaryKey */
+    val id: Rep[Int] = column[Int]("id", O.PrimaryKey)
+    /** Database column name SqlType(VARCHAR), Length(255,true) */
+    val name: Rep[String] = column[String]("name", O.Length(255,varying=true))
+  }
+  /** Collection-like TableQuery object for table EmployeePosition */
+  lazy val EmployeePosition = new TableQuery(tag => new EmployeePosition(tag))
 
   /** Entity class storing rows of table Password
    *  @param employeeNumber Database column employee_number SqlType(INT), PrimaryKey
