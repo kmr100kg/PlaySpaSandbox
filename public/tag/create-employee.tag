@@ -120,6 +120,14 @@
         </div>
         <div class="ui bottom attached tab" data-tab="third">
             <div class="ui form">
+                <div class="two fields">
+                    <div class="field">
+                        <department-selector/>
+                    </div>
+                    <div class="field">
+                        <position-selector/>
+                    </div>
+                </div>
             </div>
         </div>
         <p/>
@@ -135,6 +143,14 @@
             $('.menu .item').tab();
 
             $('#gender').dropdown({
+                allowAdditions: true
+            });
+
+            $('#department').dropdown({
+                allowAdditions: true
+            });
+
+            $('#position').dropdown({
                 allowAdditions: true
             });
 

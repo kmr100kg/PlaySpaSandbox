@@ -14,5 +14,9 @@ POST    /edit                       controllers.EmployeeController.edit
 
 GET     /delete                     controllers.EmployeeController.delete(employeeNumber: Int)
 
+GET     /department/list            controllers.DepartmentController.list
+
+GET     /position/list              controllers.PositionController.list
+
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
